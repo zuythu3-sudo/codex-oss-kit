@@ -65,10 +65,10 @@ If you use `$skill-installer`, you can still point it at a single skill director
 Other public repositories can run the same checkers without copying scripts:
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v7
   with:
     fetch-depth: 0
-- uses: zuythu3-sudo/codex-oss-kit@v0.1.5
+- uses: zuythu3-sudo/codex-oss-kit@v0.1.8
   with:
     checks: all
 ```

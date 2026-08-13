@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.8 — 2026-08-13
+
+### Changed
+
+- CI and examples use `actions/checkout@v7` and `actions/setup-node@v7`
+
 ## 0.1.7 — 2026-08-13
 
 ### Added

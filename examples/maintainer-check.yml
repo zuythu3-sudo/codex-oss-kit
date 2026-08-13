@@ -12,9 +12,9 @@
 #   check:
 #     runs-on: ubuntu-latest
 #     steps:
-#       - uses: actions/checkout@v4
+#       - uses: actions/checkout@v7
 #         with:
 #           fetch-depth: 0
-#       - uses: zuythu3-sudo/codex-oss-kit@v0.1.5
+#       - uses: zuythu3-sudo/codex-oss-kit@v0.1.8
 #         with:
 #           checks: all
