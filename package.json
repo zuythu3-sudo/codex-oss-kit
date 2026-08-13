@@ -1,8 +1,8 @@
 {
   "name": "codex-oss-kit",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": false,
-  "description": "Codex plugin for open-source maintainers: issue triage, PR first-pass, release notes, docs drift, and OSS readiness.",
+  "description": "Local Codex skills for open-source maintainers: repo readiness, README drift checks, and draft-only issue/PR/release workflows.",
   "type": "module",
   "license": "MIT",
   "engines": {

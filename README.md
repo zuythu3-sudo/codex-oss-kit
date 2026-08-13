@@ -40,13 +40,10 @@ node .agents/skills/oss-ready/scripts/oss-ready.mjs . --lang en
 
 `--lang` accepts `en` or `zh`. If omitted, the tools follow `LANG` / `LC_ALL`. JSON output stays English so scripts can rely on it.
 
-Example:
+Saved sample reports:
 
-```text
-[PASS] Open-source license — found LICENSE
-[PASS] README with a real description — README.md is 4177 characters
-[WARN] Maintenance is not a one-night dump — 14 commit(s) spanning 0.1 days
-```
+- [English](examples/sample-oss-ready.en.txt)
+- [中文](examples/sample-oss-ready.zh.txt)
 
 ## Install into another repository
 
@@ -65,7 +62,7 @@ Existing `AGENTS.md` and skill folders are left alone unless you pass `--force`.
 - uses: actions/checkout@v7
   with:
     fetch-depth: 0
-- uses: zuythu3-sudo/codex-oss-kit@v0.3.0
+- uses: zuythu3-sudo/codex-oss-kit@v0.3.1
   with:
     checks: all
     lang: auto
@@ -86,6 +83,10 @@ A copy-paste workflow is in [`examples/maintainer-check.yml`](examples/maintaine
 
 - [zuythu3-sudo/codex-oss-kit](https://github.com/zuythu3-sudo/codex-oss-kit)
 - [zuythu3-sudo/repropack](https://github.com/zuythu3-sudo/repropack)
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) or [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md).
 
 ## License
 

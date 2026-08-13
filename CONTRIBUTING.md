@@ -1,5 +1,7 @@
 # Contributing
 
+[English](CONTRIBUTING.md) | [简体中文](CONTRIBUTING.zh-CN.md)
+
 Thanks for helping maintain this kit.
 
 ## Before you start

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.1 — 2026-08-13
+
+### Fixed
+
+- Regenerated sample reports as UTF-8 without machine-local paths or broken dashes
+- Removed stale character counts from the README example
+- Aligned the Chinese README with the English Used-by section
+- CI now also runs on Node 18, matching `engines`
+
 ## 0.3.0 — 2026-08-13
 
 ### Added

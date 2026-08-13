@@ -1,18 +1,18 @@
-﻿codex-oss-kit oss-ready
-root: D:\Codex work\codex-oss-kit
+codex-oss-kit oss-ready
+root: /path/to/repo
 
-[PASS] Open-source license 鈥?found LICENSE
-[PASS] README with a real description 鈥?README.md is 3281 characters
-[PASS] Contributor guide 鈥?found CONTRIBUTING.md
-[PASS] Security policy 鈥?found SECURITY.md
-[PASS] Codex repository policy 鈥?found AGENTS.md
-[PASS] Changelog or release notes 鈥?found CHANGELOG.md
-[PASS] Git ignore file 鈥?found .gitignore
-[PASS] Issue templates 鈥?found .github/ISSUE_TEMPLATE
-[PASS] Pull request template 鈥?found .github/PULL_REQUEST_TEMPLATE.md
-[PASS] At least one Codex skill 鈥?found 6: .agents/skills/bootstrap-kit/SKILL.md, .agents/skills/docs-drift/SKILL.md, .agents/skills/issue-triage/SKILL.md, .agents/skills/oss-ready/SKILL.md, .agents/skills/pr-first-pass/SKILL.md, .agents/skills/release-notes/SKILL.md
-[PASS] Skills use a recommended layout 鈥?6 in .agents/skills or skills
-[PASS] Recent git activity 鈥?last commit 0.0 days ago
-[PASS] Maintenance is not a one-night dump 鈥?15 commit(s) spanning 0.1 days
+[PASS] Open-source license — found LICENSE
+[PASS] README with a real description — README.md is 3181 characters
+[PASS] Contributor guide — found CONTRIBUTING.md
+[PASS] Security policy — found SECURITY.md
+[PASS] Codex repository policy — found AGENTS.md
+[PASS] Changelog or release notes — found CHANGELOG.md
+[PASS] Git ignore file — found .gitignore
+[PASS] Issue templates — found .github/ISSUE_TEMPLATE
+[PASS] Pull request template — found .github/PULL_REQUEST_TEMPLATE.md
+[PASS] At least one Codex skill — found 6: .agents/skills/bootstrap-kit/SKILL.md, .agents/skills/docs-drift/SKILL.md, .agents/skills/issue-triage/SKILL.md, .agents/skills/oss-ready/SKILL.md, .agents/skills/pr-first-pass/SKILL.md, .agents/skills/release-notes/SKILL.md
+[PASS] Skills use a recommended layout — 6 in .agents/skills or skills
+[PASS] Recent git activity — last commit 0.0 days ago
+[PASS] Maintenance is not a one-night dump — 16 commit(s) spanning 0.1 days
 
 13 passed, 0 warning(s), 0 failing

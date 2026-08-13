@@ -1,16 +1,18 @@
-﻿codex-oss-kit oss-ready
-鏍圭洰褰? D:\Codex work\codex-oss-kit
+codex-oss-kit oss-ready
+根目录: /path/to/repo
 
-[閫氳繃] 寮€婧愯鍙瘉 鈥?宸叉壘鍒?LICENSE
-[閫氳繃] 鏈夊疄璐ㄥ唴瀹圭殑 README 鈥?README.md 鍏?3281 涓瓧绗?[閫氳繃] 璐＄尞鎸囧崡 鈥?宸叉壘鍒?CONTRIBUTING.md
-[閫氳繃] 瀹夊叏鏀跨瓥 鈥?宸叉壘鍒?SECURITY.md
-[閫氳繃] Codex 浠撳簱璇存槑 AGENTS.md 鈥?宸叉壘鍒?AGENTS.md
-[閫氳繃] 鏇存柊鏃ュ織鎴栧彂鐗堣鏄?鈥?宸叉壘鍒?CHANGELOG.md
-[閫氳繃] Git 蹇界暐鏂囦欢 鈥?宸叉壘鍒?.gitignore
-[閫氳繃] Issue 妯℃澘 鈥?宸叉壘鍒?.github/ISSUE_TEMPLATE
-[閫氳繃] Pull request 妯℃澘 鈥?宸叉壘鍒?.github/PULL_REQUEST_TEMPLATE.md
-[閫氳繃] 鑷冲皯涓€涓?Codex skill 鈥?宸叉壘鍒?6 涓細.agents/skills/bootstrap-kit/SKILL.md, .agents/skills/docs-drift/SKILL.md, .agents/skills/issue-triage/SKILL.md, .agents/skills/oss-ready/SKILL.md, .agents/skills/pr-first-pass/SKILL.md, .agents/skills/release-notes/SKILL.md
-[閫氳繃] Skill 浣跨敤鎺ㄨ崘鐩綍 鈥?6 涓綅浜?.agents/skills 鎴?skills
-[閫氳繃] 杩戞湡 git 娲诲姩 鈥?涓婃鎻愪氦鍦?0.0 澶╁墠
-[閫氳繃] 缁存姢璁板綍涓嶆槸涓€澶滃爢鍑烘潵鐨?鈥?15 娆℃彁浜わ紝璺ㄥ害 0.1 澶?
-13 椤归€氳繃锛? 椤硅鍛婏紝0 椤瑰け璐?
+[通过] 开源许可证 — 已找到 LICENSE
+[通过] 有实质内容的 README — README.md 共 3181 个字符
+[通过] 贡献指南 — 已找到 CONTRIBUTING.md
+[通过] 安全政策 — 已找到 SECURITY.md
+[通过] Codex 仓库说明 AGENTS.md — 已找到 AGENTS.md
+[通过] 更新日志或发版说明 — 已找到 CHANGELOG.md
+[通过] Git 忽略文件 — 已找到 .gitignore
+[通过] Issue 模板 — 已找到 .github/ISSUE_TEMPLATE
+[通过] Pull request 模板 — 已找到 .github/PULL_REQUEST_TEMPLATE.md
+[通过] 至少一个 Codex skill — 已找到 6 个：.agents/skills/bootstrap-kit/SKILL.md, .agents/skills/docs-drift/SKILL.md, .agents/skills/issue-triage/SKILL.md, .agents/skills/oss-ready/SKILL.md, .agents/skills/pr-first-pass/SKILL.md, .agents/skills/release-notes/SKILL.md
+[通过] Skill 使用推荐目录 — 6 个位于 .agents/skills 或 skills
+[通过] 近期 git 活动 — 上次提交在 0.0 天前
+[通过] 维护记录不是一夜堆出来的 — 16 次提交，跨度 0.1 天
+
+13 项通过，0 项警告，0 项失败

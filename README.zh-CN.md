@@ -40,6 +40,11 @@ node .agents/skills/oss-ready/scripts/oss-ready.mjs . --lang en
 
 `--lang` 可以是 `en` 或 `zh`。不写则跟随 `LANG` / `LC_ALL`。JSON 始终是英文。
 
+示例报告：
+
+- [English](examples/sample-oss-ready.en.txt)
+- [中文](examples/sample-oss-ready.zh.txt)
+
 ## 装进另一个仓库
 
 只用于你拥有或有权维护的仓库。
@@ -57,7 +62,7 @@ npx --yes github:zuythu3-sudo/codex-oss-kit -- /path/to/your/repo --lang zh
 - uses: actions/checkout@v7
   with:
     fetch-depth: 0
-- uses: zuythu3-sudo/codex-oss-kit@v0.3.0
+- uses: zuythu3-sudo/codex-oss-kit@v0.3.1
   with:
     checks: all
     lang: zh
@@ -71,6 +76,15 @@ npx --yes github:zuythu3-sudo/codex-oss-kit -- /path/to/your/repo --lang zh
 - 不能自动通过任何 OpenAI 计划
 - 不是用来扫别人私有仓库的
 - 不是无人值守的评论/合并机器人
+
+## 谁在用
+
+- [zuythu3-sudo/codex-oss-kit](https://github.com/zuythu3-sudo/codex-oss-kit)
+- [zuythu3-sudo/repropack](https://github.com/zuythu3-sudo/repropack)
+
+## 贡献
+
+见 [CONTRIBUTING.md](CONTRIBUTING.md) 或 [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md)。
 
 ## 许可
 
