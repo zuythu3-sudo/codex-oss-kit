@@ -10,6 +10,21 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, "..");
 const checker = path.join(repoRoot, ".agents/skills/oss-ready/scripts/oss-ready.mjs");
 
+test("reusable GitHub Action points at real checkers", () => {
+  const actionFile = path.join(repoRoot, "action.yml");
+  const text = fs.readFileSync(actionFile, "utf8");
+  assert.match(text, /oss-ready\.mjs/);
+  assert.match(text, /docs-drift\.mjs/);
+  assert.equal(
+    fs.existsSync(path.join(repoRoot, ".agents/skills/oss-ready/scripts/oss-ready.mjs")),
+    true,
+  );
+  assert.equal(
+    fs.existsSync(path.join(repoRoot, ".agents/skills/docs-drift/scripts/docs-drift.mjs")),
+    true,
+  );
+});
+
 function run(cwd, extraArgs = []) {
   return spawnSync(process.execPath, [checker, cwd, ...extraArgs], {
     encoding: "utf8",

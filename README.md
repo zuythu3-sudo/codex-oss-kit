@@ -68,11 +68,24 @@ Then, in Codex:
 
 Copy `AGENTS.md` as well if the target repository does not already tell Codex when to call these skills.
 
-If you use `$skill-installer`, point it at a skill directory in this repository once the GitHub URL exists. Until then, copy the folders.
+If you use `$skill-installer`, point it at a skill directory such as `https://github.com/zuythu3-sudo/codex-oss-kit/tree/main/.agents/skills/oss-ready`.
 
-## GitHub Actions
+## GitHub Action
 
-`.github/workflows/ci.yml` runs tests and the two local checkers on every push. It does not call the OpenAI API.
+Other public repositories can run the same checkers without copying scripts:
+
+```yaml
+- uses: actions/checkout@v4
+  with:
+    fetch-depth: 0
+- uses: zuythu3-sudo/codex-oss-kit@v0.1.3
+  with:
+    checks: all
+```
+
+`checks` can be `all`, `oss-ready`, or `docs-drift`. This Action does not call the OpenAI API.
+
+This repository dogfoods that Action in `.github/workflows/ci.yml`. A copy-paste workflow is in `examples/maintainer-check.yml`.
 
 `examples/pr-first-pass-action.yml` is a commented template for running `$pr-first-pass` through the official [`openai/codex-action`](https://github.com/openai/codex-action). Copy it only if you have an API key and permission to review that repository.
 
@@ -87,7 +100,8 @@ If you use these skills on GitHub, a human must approve the exact comment, label
 
 ## Used by
 
-This repository uses the kit on itself. External adopters will be listed here when they exist.
+- [zuythu3-sudo/codex-oss-kit](https://github.com/zuythu3-sudo/codex-oss-kit) — this repository
+- [zuythu3-sudo/repropack](https://github.com/zuythu3-sudo/repropack) — CI runs `codex-oss-kit` on every push
 
 ## License
 

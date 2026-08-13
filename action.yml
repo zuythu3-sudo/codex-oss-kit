@@ -1,0 +1,41 @@
+name: Codex OSS maintainer check
+description: Run oss-ready and docs-drift on a checked-out public repository
+author: zuythu3-sudo
+branding:
+  icon: check-square
+  color: purple
+
+inputs:
+  path:
+    description: Repository path to audit
+    required: false
+    default: "."
+  checks:
+    description: "Which checks to run: all, oss-ready, or docs-drift"
+    required: false
+    default: all
+
+runs:
+  using: composite
+  steps:
+    - name: Run maintainer checks
+      shell: bash
+      env:
+        CHECK_PATH: ${{ inputs.path }}
+        CHECKS: ${{ inputs.checks }}
+        ACTION_ROOT: ${{ github.action_path }}
+      run: |
+        set -euo pipefail
+        case "${CHECKS}" in
+          all|oss-ready|docs-drift) ;;
+          *)
+            echo "Unknown checks: ${CHECKS}"
+            exit 1
+            ;;
+        esac
+        if [ "${CHECKS}" = "all" ] || [ "${CHECKS}" = "oss-ready" ]; then
+          node "${ACTION_ROOT}/.agents/skills/oss-ready/scripts/oss-ready.mjs" "${CHECK_PATH}"
+        fi
+        if [ "${CHECKS}" = "all" ] || [ "${CHECKS}" = "docs-drift" ]; then
+          node "${ACTION_ROOT}/.agents/skills/docs-drift/scripts/docs-drift.mjs" "${CHECK_PATH}"
+        fi

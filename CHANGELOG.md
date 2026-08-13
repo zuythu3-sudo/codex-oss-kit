@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.3 — 2026-08-13
+
+### Added
+
+- Reusable GitHub Action (`action.yml`) for `$oss-ready` and `$docs-drift`
+- Example workflow other repositories can copy
+
 ## 0.1.2 — 2026-08-13
 
 ### Changed
