@@ -1,0 +1,38 @@
+{
+  "name": "codex-oss-kit",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Codex plugin for open-source maintainers: issue triage, PR first-pass, release notes, docs drift, and OSS readiness.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "oss-ready": "./.agents/skills/oss-ready/scripts/oss-ready.mjs",
+    "docs-drift": "./.agents/skills/docs-drift/scripts/docs-drift.mjs"
+  },
+  "scripts": {
+    "oss-ready": "node .agents/skills/oss-ready/scripts/oss-ready.mjs .",
+    "docs-drift": "node .agents/skills/docs-drift/scripts/docs-drift.mjs .",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "files": [
+    ".agents/skills",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "codex",
+    "openai",
+    "skills",
+    "open-source",
+    "maintainer",
+    "github"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_GITHUB_USERNAME/codex-oss-kit.git"
+  }
+}

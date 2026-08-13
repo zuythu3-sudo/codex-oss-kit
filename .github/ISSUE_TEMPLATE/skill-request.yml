@@ -1,0 +1,27 @@
+name: Skill request
+description: Ask for a new maintainer workflow
+title: "skill: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: job
+    attributes:
+      label: Maintainer job
+      description: What recurring OSS task should Codex do?
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Local script
+        - Draft-only GitHub text
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: not
+    attributes:
+      label: What this should not do
+      description: Especially anything that would post to GitHub without approval.

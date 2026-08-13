@@ -1,0 +1,23 @@
+# Optional template. This is not enabled in this repository.
+# Copy into another repository you own, then add OPENAI_API_KEY
+# as a repository secret. Confirm the current inputs against
+# https://github.com/openai/codex-action before you enable it.
+#
+# name: pr-first-pass
+# on:
+#   pull_request:
+#     types: [opened, synchronize, reopened]
+# jobs:
+#   draft-review:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+#       pull-requests: read
+#     steps:
+#       - uses: actions/checkout@v4
+#       - uses: openai/codex-action@v1
+#         with:
+#           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+#           prompt: >
+#             Use $pr-first-pass on this pull request.
+#             Draft a review only. Do not post to GitHub.

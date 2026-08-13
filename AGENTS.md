@@ -1,0 +1,37 @@
+# AGENTS.md
+
+## Project overview
+
+codex-oss-kit is a Codex plugin for open-source maintainers.
+
+- Repo-local skills live under `.agents/skills/`.
+- Executable checkers live under each skill's `scripts/` directory.
+- Tests live under `tests/`.
+- Copy-paste GitHub Actions live under `examples/` and `.github/workflows/`.
+
+This repository dogfoods its own kit. Treat the skills as the product.
+
+## Mandatory skill usage
+
+- Use `$oss-ready` before claiming the repository is ready to publish, tag, or cite in an application.
+- Use `$docs-drift` when README, package scripts, or install instructions change.
+- Use `$issue-triage` on new GitHub issues. Draft only. Do not post until a human approves.
+- Use `$pr-first-pass` on incoming pull requests. Draft only. Do not post until a human approves.
+- Use `$release-notes` before tagging a release.
+
+Never comment on, label, close, or push to GitHub unless the maintainer explicitly approved the exact text.
+
+## Build and test commands
+
+- `npm test` — run checker tests
+- `npm run oss-ready` — audit this repository
+- `npm run docs-drift` — check README commands against this repository
+
+Node.js 18+ is required. There are no production npm dependencies.
+
+## Safety
+
+- Skills may only inspect repositories the operator owns or is authorized to review.
+- Do not scan private repositories without permission.
+- Do not invent install counts, stars, or user quotes.
+- Keep GitHub writes human-gated.
