@@ -4,7 +4,7 @@ Codex skills for people who actually maintain a public repository.
 
 The kit follows the same shape OpenAI documented for OSS maintenance: `AGENTS.md`, repo-local skills, and optional GitHub Actions. It is not a ChatGPT wrapper and not an application-form generator.
 
-This kit includes five skills. Two of them ship with a real local checker. The other three are instruction skills that draft GitHub text and refuse to post it until a human says so.
+This kit includes six skills. Three ship with a real local script. The others draft GitHub text or install the kit, and they refuse to overwrite or post unless you say so.
 
 | Skill | What it does | Kind |
 | --- | --- | --- |
@@ -13,6 +13,7 @@ This kit includes five skills. Two of them ship with a real local checker. The o
 | `$issue-triage` | Draft labels and a first reply for a new issue | Draft only |
 | `$pr-first-pass` | Summarize a PR, list risks, say if a human must look | Draft only |
 | `$release-notes` | Draft changelog text from git history | Draft only |
+| `$bootstrap-kit` | Copy skills into another repo and draft `AGENTS.md` if missing | Script |
 
 ## Requirements
 
@@ -40,35 +41,23 @@ node .agents/skills/docs-drift/scripts/docs-drift.mjs . --json
 
 ## Use the skills in Codex
 
-Copy the skill folders into another checkout you own or are authorized to maintain:
+Install into another checkout you own:
 
 ```bash
-mkdir -p .agents/skills
-cp -R /path/to/codex-oss-kit/.agents/skills/oss-ready .agents/skills/
-cp -R /path/to/codex-oss-kit/.agents/skills/docs-drift .agents/skills/
-cp -R /path/to/codex-oss-kit/.agents/skills/issue-triage .agents/skills/
-cp -R /path/to/codex-oss-kit/.agents/skills/pr-first-pass .agents/skills/
-cp -R /path/to/codex-oss-kit/.agents/skills/release-notes .agents/skills/
+node .agents/skills/bootstrap-kit/scripts/bootstrap-kit.mjs /path/to/your/repo
 ```
 
-On Windows PowerShell:
+Preview first:
 
-```powershell
-New-Item -ItemType Directory -Force .agents\skills | Out-Null
-Copy-Item -Recurse <kit>\.agents\skills\* .agents\skills\
+```bash
+node .agents/skills/bootstrap-kit/scripts/bootstrap-kit.mjs /path/to/your/repo --dry-run
 ```
 
-Then, in Codex:
+That copies `$oss-ready`, `$docs-drift`, `$issue-triage`, `$pr-first-pass`, and `$release-notes` into `.agents/skills`. It writes `AGENTS.md` only when that file is missing. Existing files stay put unless you pass `--force`.
 
-- `$oss-ready`
-- `$docs-drift`
-- `$issue-triage`
-- `$pr-first-pass`
-- `$release-notes`
+Then, in Codex, run `$oss-ready` in the target repository.
 
-Copy `AGENTS.md` as well if the target repository does not already tell Codex when to call these skills.
-
-If you use `$skill-installer`, point it at a skill directory in this repository, for example `https://github.com/zuythu3-sudo/codex-oss-kit/tree/main/.agents/skills/oss-ready`. Copying the folders remains an alternative if you are not using the installer.
+If you use `$skill-installer`, you can still point it at a single skill directory such as `https://github.com/zuythu3-sudo/codex-oss-kit/tree/main/.agents/skills/oss-ready`.
 
 ## GitHub Action
 

@@ -1,6 +1,6 @@
 {
   "name": "codex-oss-kit",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": false,
   "description": "Codex plugin for open-source maintainers: issue triage, PR first-pass, release notes, docs drift, and OSS readiness.",
   "type": "module",
@@ -10,11 +10,13 @@
   },
   "bin": {
     "oss-ready": "./.agents/skills/oss-ready/scripts/oss-ready.mjs",
-    "docs-drift": "./.agents/skills/docs-drift/scripts/docs-drift.mjs"
+    "docs-drift": "./.agents/skills/docs-drift/scripts/docs-drift.mjs",
+    "bootstrap-kit": "./.agents/skills/bootstrap-kit/scripts/bootstrap-kit.mjs"
   },
   "scripts": {
     "oss-ready": "node .agents/skills/oss-ready/scripts/oss-ready.mjs .",
     "docs-drift": "node .agents/skills/docs-drift/scripts/docs-drift.mjs .",
+    "bootstrap": "node .agents/skills/bootstrap-kit/scripts/bootstrap-kit.mjs",
     "test": "node --test tests/*.test.mjs"
   },
   "files": [

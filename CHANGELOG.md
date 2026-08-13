@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.6 — 2026-08-13
+
+### Added
+
+- `$bootstrap-kit` installs maintainer skills into another checkout and drafts `AGENTS.md` without overwriting
+
 ## 0.1.5 — 2026-08-13
 
 ### Added
