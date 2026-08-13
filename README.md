@@ -68,7 +68,7 @@ Other public repositories can run the same checkers without copying scripts:
 - uses: actions/checkout@v7
   with:
     fetch-depth: 0
-- uses: zuythu3-sudo/codex-oss-kit@v0.1.8
+- uses: zuythu3-sudo/codex-oss-kit@v0.1.9
   with:
     checks: all
 ```

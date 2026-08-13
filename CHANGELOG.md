@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.9 — 2026-08-13
+
+### Changed
+
+- CI workflow is limited to `contents: read`
+
 ## 0.1.8 — 2026-08-13
 
 ### Changed
