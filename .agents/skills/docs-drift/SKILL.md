@@ -1,6 +1,6 @@
 ---
 name: docs-drift
-description: Check whether README install and test commands still match package.json scripts and local files. Use when README, scripts, or setup docs change, or when a contributor says the documented commands fail.
+description: Check whether README install and test commands still match this repository. Covers npm/yarn/pnpm/bun scripts, node/python files, make targets, cargo, go, and local scripts. Use when README or setup docs change, or when a contributor says documented commands fail.
 ---
 
 # docs-drift
@@ -31,7 +31,16 @@ node .agents/skills/docs-drift/scripts/docs-drift.mjs . --json
 3. Either fix the README or restore the missing script/file.
 4. Re-run the checker.
 
-The script only validates local `npm test`, `npm run <script>`, and `node <relative-file>` commands inside fenced code blocks. Clone, copy, and third-party commands are ignored on purpose.
+The script validates fenced commands that look like local project work:
+
+- `npm` / `yarn` / `pnpm` / `bun` scripts
+- `node` and `python` files
+- `make` targets
+- `cargo test|build|run` when `Cargo.toml` should exist
+- `go test|build` when `go.mod` should exist
+- `./script` and `bash script.sh`
+
+Clone, copy, and generic third-party install commands are ignored on purpose.
 
 ## Output format
 

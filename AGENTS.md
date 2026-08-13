@@ -14,7 +14,7 @@ This repository dogfoods its own kit. Treat the skills as the product.
 ## Mandatory skill usage
 
 - Use `$oss-ready` before claiming the repository is ready to publish, tag, or cite in an application.
-- Use `$docs-drift` when README, package scripts, or install instructions change.
+- Use `$docs-drift` when README, package scripts, Makefiles, or install instructions change.
 - Use `$issue-triage` on new GitHub issues. Draft only. Do not post until a human approves.
 - Use `$pr-first-pass` on incoming pull requests. Draft only. Do not post until a human approves.
 - Use `$release-notes` before tagging a release.
