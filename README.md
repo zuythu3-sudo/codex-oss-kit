@@ -45,6 +45,7 @@ Install into another checkout you own:
 
 ```bash
 node .agents/skills/bootstrap-kit/scripts/bootstrap-kit.mjs /path/to/your/repo
+npx --yes github:zuythu3-sudo/codex-oss-kit -- /path/to/your/repo --dry-run
 ```
 
 Preview first:

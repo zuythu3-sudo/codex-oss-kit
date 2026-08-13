@@ -10,6 +10,15 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, "..");
 const checker = path.join(repoRoot, ".agents/skills/oss-ready/scripts/oss-ready.mjs");
 
+test("package exposes a matching npx binary for bootstrap", () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(repoRoot, "package.json"), "utf8"));
+  assert.equal(pkg.bin["codex-oss-kit"], "./.agents/skills/bootstrap-kit/scripts/bootstrap-kit.mjs");
+  assert.equal(
+    fs.existsSync(path.join(repoRoot, ".agents/skills/bootstrap-kit/scripts/bootstrap-kit.mjs")),
+    true,
+  );
+});
+
 test("reusable GitHub Action points at real checkers", () => {
   const actionFile = path.join(repoRoot, "action.yml");
   const text = fs.readFileSync(actionFile, "utf8");

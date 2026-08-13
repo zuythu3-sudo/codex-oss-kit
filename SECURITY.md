@@ -8,7 +8,7 @@ The `main` branch and the latest tagged release are supported.
 
 Do not open a public issue for a security report.
 
-GitHub private vulnerability reporting is not enabled on this repository. Email the maintainer listed on the [GitHub profile](https://github.com/zuythu3-sudo) that owns the repository.
+Use [GitHub private vulnerability reporting](https://github.com/zuythu3-sudo/codex-oss-kit/security/advisories/new) on this repository.
 
 Include:
 

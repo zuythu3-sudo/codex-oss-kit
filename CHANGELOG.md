@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.7 — 2026-08-13
+
+### Added
+
+- `codex-oss-kit` binary so the installer can run via `npx github:zuythu3-sudo/codex-oss-kit`
+- Weekly scheduled CI and `workflow_dispatch`
+- Dependabot updates for GitHub Actions
+- Private vulnerability reporting
+
 ## 0.1.6 — 2026-08-13
 
 ### Added
