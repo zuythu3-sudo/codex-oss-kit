@@ -115,3 +115,39 @@ test("top-level skill folders pass with a layout warning", () => {
   assert.equal(skills.status, "pass");
   assert.equal(layout.status, "warn");
 });
+
+test("GitHub-canonical hygiene paths and lowercase readme.md are accepted", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "oss-ready-github-paths-"));
+  write(root, "LICENSE", "MIT\n");
+  write(root, "readme.md", `${"A public maintainer kit. ".repeat(20)}\n`);
+  write(root, ".github/CONTRIBUTING.md");
+  write(root, ".github/SECURITY.md");
+  write(root, ".github/PULL_REQUEST_TEMPLATE.md", "## What\n");
+  write(root, "AGENTS.md", "# agents\n");
+  write(root, ".agents/skills/demo/SKILL.md", "---\nname: demo\ndescription: demo\n---\n");
+  const report = JSON.parse(run(root, ["--json"]).stdout);
+  assert.equal(report.checks.find((item) => item.id === "readme").status, "pass");
+  assert.equal(report.checks.find((item) => item.id === "contributing").status, "pass");
+  assert.equal(report.checks.find((item) => item.id === "security").status, "pass");
+  assert.equal(report.checks.find((item) => item.id === "pr-template").status, "pass");
+});
+
+test("PULL_REQUEST_TEMPLATE directory counts as a pull request template", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "oss-ready-pr-dir-"));
+  hygieneFiles(root);
+  write(root, ".agents/skills/demo/SKILL.md", "---\nname: demo\ndescription: demo\n---\n");
+  write(root, ".github/PULL_REQUEST_TEMPLATE/default.md", "## What\n");
+  const pr = skillCheck(root, "pr-template");
+  assert.equal(pr.status, "pass");
+  assert.match(pr.detail, /PULL_REQUEST_TEMPLATE/);
+});
+
+test("nested foo/skills/bar/SKILL.md counts with a layout warning", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "oss-ready-nested-skill-"));
+  hygieneFiles(root);
+  write(root, "foo/skills/bar/SKILL.md", "---\nname: bar\ndescription: demo\n---\n");
+  const skills = skillCheck(root, "skills");
+  const layout = skillCheck(root, "skills-layout");
+  assert.equal(skills.status, "pass");
+  assert.equal(layout.status, "warn");
+});

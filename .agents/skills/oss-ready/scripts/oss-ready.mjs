@@ -171,7 +171,7 @@ const checks = [
     title: "README with a real description",
     level: FAIL,
     run() {
-      const file = firstExisting(["README.md", "README.MD", "Readme.md"]);
+      const file = firstExisting(["README.md", "README.MD", "Readme.md", "readme.md"]);
       if (!file) return { ok: false, detail: "missing README.md" };
       const text = read(file).trim();
       if (text.length < 200) {
@@ -185,7 +185,7 @@ const checks = [
     title: "Contributor guide",
     level: FAIL,
     run() {
-      const file = firstExisting(["CONTRIBUTING.md", "docs/CONTRIBUTING.md"]);
+      const file = firstExisting(["CONTRIBUTING.md", "docs/CONTRIBUTING.md", ".github/CONTRIBUTING.md"]);
       return file
         ? { ok: true, detail: `found ${file}` }
         : { ok: false, detail: "missing CONTRIBUTING.md" };
@@ -196,7 +196,7 @@ const checks = [
     title: "Security policy",
     level: FAIL,
     run() {
-      const file = firstExisting(["SECURITY.md", "docs/SECURITY.md"]);
+      const file = firstExisting(["SECURITY.md", "docs/SECURITY.md", ".github/SECURITY.md"]);
       return file
         ? { ok: true, detail: `found ${file}` }
         : { ok: false, detail: "missing SECURITY.md" };
@@ -258,10 +258,26 @@ const checks = [
         ".github/PULL_REQUEST_TEMPLATE.md",
         ".github/pull_request_template.md",
         "docs/pull_request_template.md",
+        "docs/PULL_REQUEST_TEMPLATE.md",
+        "PULL_REQUEST_TEMPLATE.md",
+        "pull_request_template.md",
       ]);
-      return file
-        ? { ok: true, detail: `found ${file}` }
-        : { ok: false, detail: "missing pull request template" };
+      if (file) return { ok: true, detail: `found ${file}` };
+      const dirNames = [".github/PULL_REQUEST_TEMPLATE", ".github/pull_request_template"];
+      for (const relative of dirNames) {
+        const dir = path.join(root, relative);
+        if (!fs.existsSync(dir)) continue;
+        try {
+          if (!fs.statSync(dir).isDirectory()) continue;
+          const entries = fs.readdirSync(dir).filter((name) => !name.startsWith("."));
+          if (entries.length > 0) {
+            return { ok: true, detail: `found ${relative}` };
+          }
+        } catch {
+          // ignore unreadable template dirs
+        }
+      }
+      return { ok: false, detail: "missing pull request template" };
     },
   },
   {

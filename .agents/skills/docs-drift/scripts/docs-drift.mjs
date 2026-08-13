@@ -18,6 +18,16 @@ const jsonMode = args.includes("--json");
 const rootArg = args.find((value) => !value.startsWith("-")) ?? ".";
 const root = path.resolve(rootArg);
 
+/** Package-manager verbs that are not package.json scripts. */
+const PACKAGE_MANAGER_RESERVED = new Set([
+  "add", "audit", "bin", "cache", "ci", "config", "create", "dedupe", "dlx",
+  "exec", "explain", "fund", "global", "help", "i", "import", "info", "init",
+  "install", "link", "login", "logout", "outdated", "owner", "pack", "patch",
+  "pkg", "plugin", "pm", "prune", "publish", "rebuild", "remove", "rm", "run",
+  "search", "set", "test", "unlink", "unplugin", "up", "update", "upgrade",
+  "version", "why", "workspace", "workspaces", "x",
+]);
+
 function existsHere(relative) {
   const resolved = resolveLocal(relative);
   return Boolean(resolved && fs.existsSync(resolved));
@@ -25,7 +35,11 @@ function existsHere(relative) {
 
 function resolveLocal(relative) {
   if (!relative) return null;
-  const cleaned = relative.replace(/^(\.\/|\\\.?\\)/, "").replace(/\\/g, "/");
+  const posix = relative.replace(/\\/g, "/");
+  if (posix === "." || posix === "./") {
+    return root;
+  }
+  const cleaned = posix.replace(/^\.\//, "");
   if (
     !cleaned ||
     cleaned.startsWith("http://") ||
@@ -41,8 +55,30 @@ function resolveLocal(relative) {
   return resolved;
 }
 
+function readIfFile(relative) {
+  const resolved = resolveLocal(relative);
+  if (!resolved || !fs.existsSync(resolved)) return null;
+  try {
+    if (!fs.statSync(resolved).isFile()) return null;
+    return fs.readFileSync(resolved, "utf8");
+  } catch {
+    return null;
+  }
+}
+
+function listNames(relative) {
+  const dir = relative === "." || relative === "./" ? root : resolveLocal(relative);
+  if (!dir || !fs.existsSync(dir)) return [];
+  try {
+    if (!fs.statSync(dir).isDirectory()) return [];
+    return fs.readdirSync(dir);
+  } catch {
+    return [];
+  }
+}
+
 function readReadme() {
-  for (const name of ["README.md", "README.MD", "Readme.md"]) {
+  for (const name of ["README.md", "README.MD", "Readme.md", "readme.md"]) {
     const file = path.join(root, name);
     if (fs.existsSync(file)) return { name, text: fs.readFileSync(file, "utf8") };
   }
@@ -92,15 +128,24 @@ function makefileTargets() {
 }
 
 function hasPythonTests() {
-  return [
-    "pytest.ini",
-    "conftest.py",
-    "pyproject.toml",
-    "setup.cfg",
-    "tox.ini",
-    "tests",
-    "test",
-  ].some((name) => fs.existsSync(path.join(root, name)));
+  if (
+    existsHere("pytest.ini") ||
+    existsHere("conftest.py") ||
+    existsHere("tests/conftest.py") ||
+    existsHere("test/conftest.py") ||
+    existsHere("tox.ini")
+  ) {
+    return true;
+  }
+  const pyproject = readIfFile("pyproject.toml");
+  if (pyproject && /\[tool\.pytest\b/.test(pyproject)) return true;
+  const setupCfg = readIfFile("setup.cfg");
+  if (setupCfg && /\[(?:tool:)?pytest\]/.test(setupCfg)) return true;
+  const names = [...listNames("tests"), ...listNames("test"), ...listNames(".")];
+  return names.some(
+    (name) =>
+      (name.startsWith("test_") && name.endsWith(".py")) || name.endsWith("_test.py"),
+  );
 }
 
 /**
@@ -112,6 +157,16 @@ function firstToken(command) {
 }
 
 /**
+ * @param {string} name
+ * @param {Record<string, string>} scripts
+ */
+function scriptCheck(name, scripts) {
+  return scripts[name]
+    ? { kind: "pkg-run", ok: true, detail: "package.json scripts." + name + " exists" }
+    : { kind: "pkg-run", ok: false, detail: "package.json has no scripts." + name };
+}
+
+/**
  * @param {string} command
  * @param {Record<string, string>} scripts
  * @param {Set<string>} targets
@@ -119,16 +174,33 @@ function firstToken(command) {
 function inspect(command, scripts, targets) {
   const npmRun = command.match(/^(?:npm(?:\.cmd)?|yarn|pnpm|bun)\s+run\s+([A-Za-z0-9:_-]+)/);
   if (npmRun) {
-    const name = npmRun[1];
-    return scripts[name]
-      ? { kind: "pkg-run", ok: true, detail: `package.json scripts.${name} exists` }
-      : { kind: "pkg-run", ok: false, detail: `package.json has no scripts.${name}` };
+    return scriptCheck(npmRun[1], scripts);
   }
 
-  if (/^(?:npm(?:\.cmd)?|yarn|pnpm|bun)\s+test\b/.test(command)) {
+  if (command === "bun test" || command.startsWith("bun test ")) {
+    const bunProject =
+      existsHere("package.json") || existsHere("bun.lockb") || existsHere("bun.lock");
+    return bunProject
+      ? { kind: "bun-test", ok: true, detail: "bun test does not require scripts.test" }
+      : { kind: "bun-test", ok: false, detail: "no package.json, bun.lock, or bun.lockb" };
+  }
+
+  if (/^(?:npm(?:\.cmd)?|yarn|pnpm)\s+test\b/.test(command)) {
     return scripts.test
       ? { kind: "pkg-test", ok: true, detail: "package.json scripts.test exists" }
       : { kind: "pkg-test", ok: false, detail: "package.json has no scripts.test" };
+  }
+
+  const npmTokens = command.split(/\s+/);
+  const npmBin = npmTokens[0] === "npm" || npmTokens[0] === "npm.cmd";
+  const life = npmBin ? npmTokens[1] : "";
+  if (life === "start" || life === "stop" || life === "restart") {
+    if (life === "restart") {
+      return scripts.restart || scripts.start
+        ? { kind: "pkg-run", ok: true, detail: "package.json scripts.restart or scripts.start exists" }
+        : { kind: "pkg-run", ok: false, detail: "package.json has no scripts.restart or scripts.start" };
+    }
+    return scriptCheck(life, scripts);
   }
 
   if (
@@ -137,6 +209,14 @@ function inspect(command, scripts, targets) {
     /^uv\s+pip\s+install\s+(?!-r\b)/.test(command)
   ) {
     return { kind: "pkg-install", ok: true, detail: "install command, not a repo script" };
+  }
+
+  const pkgShorthand = command.match(/^(?:yarn|pnpm|bun)\s+([A-Za-z0-9:_-]+)/);
+  if (pkgShorthand) {
+    const name = pkgShorthand[1];
+    if (!PACKAGE_MANAGER_RESERVED.has(name)) {
+      return scriptCheck(name, scripts);
+    }
   }
 
   const pipReq = command.match(/^(?:pip(?:3)?|uv\s+pip)\s+install\s+-r\s+(\S+)/);
@@ -176,7 +256,7 @@ function inspect(command, scripts, targets) {
   if (/^(?:python3?|py(?:\s+-3)?)\s+-m\s+pytest\b/.test(command) || /^pytest\b/.test(command)) {
     return hasPythonTests()
       ? { kind: "pytest", ok: true, detail: "python test layout exists" }
-      : { kind: "pytest", ok: false, detail: "no pytest.ini, pyproject.toml, or tests/ directory" };
+      : { kind: "pytest", ok: false, detail: "no pytest.ini, conftest.py, pytest config, or Python test files" };
   }
 
   const makeTarget = command.match(/^make\s+([A-Za-z0-9._-]+)/);

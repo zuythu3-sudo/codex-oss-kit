@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.4 — 2026-08-13
+
+### Fixed
+
+- `$docs-drift`: repo-root Go targets, real pytest signals, bun runner, package-script shorthands
+- `$oss-ready`: GitHub-canonical contributing/security/PR template paths and lowercase readme
+- Security docs no longer send reporters to a missing advisory form
+- README points `$skill-installer` at the public GitHub URL
+
 ## 0.1.3 — 2026-08-13
 
 ### Added

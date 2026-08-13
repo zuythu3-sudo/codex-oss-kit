@@ -4,7 +4,7 @@ Codex skills for people who actually maintain a public repository.
 
 The kit follows the same shape OpenAI documented for OSS maintenance: `AGENTS.md`, repo-local skills, and optional GitHub Actions. It is not a ChatGPT wrapper and not an application-form generator.
 
-**v0.1 includes five skills.** Two of them ship with a real local checker. The other three are instruction skills that draft GitHub text and refuse to post it until a human says so.
+This kit includes five skills. Two of them ship with a real local checker. The other three are instruction skills that draft GitHub text and refuse to post it until a human says so.
 
 | Skill | What it does | Kind |
 | --- | --- | --- |
@@ -68,7 +68,7 @@ Then, in Codex:
 
 Copy `AGENTS.md` as well if the target repository does not already tell Codex when to call these skills.
 
-If you use `$skill-installer`, point it at a skill directory such as `https://github.com/zuythu3-sudo/codex-oss-kit/tree/main/.agents/skills/oss-ready`.
+If you use `$skill-installer`, point it at a skill directory in this repository, for example `https://github.com/zuythu3-sudo/codex-oss-kit/tree/main/.agents/skills/oss-ready`. Copying the folders remains an alternative if you are not using the installer.
 
 ## GitHub Action
 
