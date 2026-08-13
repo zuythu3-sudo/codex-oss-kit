@@ -33,9 +33,43 @@ runs:
             exit 1
             ;;
         esac
+
+        status=0
+        run_check() {
+          local title="$1"
+          local script="$2"
+          local out
+          local code
+          set +e
+          out="$(node "$script" "$CHECK_PATH" 2>&1)"
+          code=$?
+          set -e
+          printf '%s\n' "$out"
+          if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+            {
+              echo "## ${title}"
+              echo
+              if [ "$code" -eq 0 ]; then
+                echo "Result: passed"
+              else
+                echo "Result: failed"
+              fi
+              echo
+              echo '```text'
+              printf '%s\n' "$out"
+              echo '```'
+              echo
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ "$code" -ne 0 ]; then
+            status=1
+          fi
+        }
+
         if [ "${CHECKS}" = "all" ] || [ "${CHECKS}" = "oss-ready" ]; then
-          node "${ACTION_ROOT}/.agents/skills/oss-ready/scripts/oss-ready.mjs" "${CHECK_PATH}"
+          run_check "oss-ready" "${ACTION_ROOT}/.agents/skills/oss-ready/scripts/oss-ready.mjs"
         fi
         if [ "${CHECKS}" = "all" ] || [ "${CHECKS}" = "docs-drift" ]; then
-          node "${ACTION_ROOT}/.agents/skills/docs-drift/scripts/docs-drift.mjs" "${CHECK_PATH}"
+          run_check "docs-drift" "${ACTION_ROOT}/.agents/skills/docs-drift/scripts/docs-drift.mjs"
         fi
+        exit "$status"

@@ -78,12 +78,12 @@ Other public repositories can run the same checkers without copying scripts:
 - uses: actions/checkout@v4
   with:
     fetch-depth: 0
-- uses: zuythu3-sudo/codex-oss-kit@v0.1.3
+- uses: zuythu3-sudo/codex-oss-kit@v0.1.5
   with:
     checks: all
 ```
 
-`checks` can be `all`, `oss-ready`, or `docs-drift`. This Action does not call the OpenAI API.
+`checks` can be `all`, `oss-ready`, or `docs-drift`. Reports also appear in the GitHub Actions job summary. This Action does not call the OpenAI API.
 
 This repository dogfoods that Action in `.github/workflows/ci.yml`. A copy-paste workflow is in `examples/maintainer-check.yml`.
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.5 — 2026-08-13
+
+### Added
+
+- GitHub Action writes oss-ready and docs-drift reports to the job summary
+- Action still runs the second check when the first one fails
+
 ## 0.1.4 — 2026-08-13
 
 ### Fixed

@@ -15,6 +15,7 @@ test("reusable GitHub Action points at real checkers", () => {
   const text = fs.readFileSync(actionFile, "utf8");
   assert.match(text, /oss-ready\.mjs/);
   assert.match(text, /docs-drift\.mjs/);
+  assert.match(text, /GITHUB_STEP_SUMMARY/);
   assert.equal(
     fs.existsSync(path.join(repoRoot, ".agents/skills/oss-ready/scripts/oss-ready.mjs")),
     true,
