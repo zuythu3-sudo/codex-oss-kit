@@ -1,6 +1,6 @@
 {
   "name": "codex-oss-kit",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "private": false,
   "description": "Local Codex skills for open-source maintainers: repo readiness, README drift checks, and draft-only issue/PR/release workflows.",
   "type": "module",

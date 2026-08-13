@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.3 — 2026-08-13
+
+### Changed
+
+- Removed grant/application wording from docs and skill text
+- Neutral commit-history check title
+
 ## 0.3.2 — 2026-08-13
 
 ### Fixed

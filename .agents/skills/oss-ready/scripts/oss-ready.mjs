@@ -37,7 +37,7 @@ const TITLES = {
   skills: { en: "At least one Codex skill", zh: "至少一个 Codex skill" },
   "skills-layout": { en: "Skills use a recommended layout", zh: "Skill 使用推荐目录" },
   "recent-activity": { en: "Recent git activity", zh: "近期 git 活动" },
-  "commit-span": { en: "Maintenance is not a one-night dump", zh: "维护记录不是一夜堆出来的" },
+  "commit-span": { en: "Commit history has a time span", zh: "提交历史有时间跨度" },
 };
 
 function pair(en, zh) {

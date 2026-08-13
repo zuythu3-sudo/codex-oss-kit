@@ -31,7 +31,7 @@ If you change user-facing text, update both English and Chinese:
 - `SKILL.md` must have `name` and `description`.
 - The description must say when the skill should and should not run.
 - New checkers need a test under `tests/`.
-- Do not submit unused skill folders or generated essay dumps.
+- Do not submit unused skill folders or untested generated files.
 
 ## Pull requests
 

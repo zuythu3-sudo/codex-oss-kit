@@ -2,7 +2,7 @@ codex-oss-kit oss-ready
 root: /path/to/repo
 
 [PASS] Open-source license — found LICENSE
-[PASS] README with a real description — README.md is 3181 characters
+[PASS] README with a real description — README.md is 3188 characters
 [PASS] Contributor guide — found CONTRIBUTING.md
 [PASS] Security policy — found SECURITY.md
 [PASS] Codex repository policy — found AGENTS.md
@@ -13,6 +13,6 @@ root: /path/to/repo
 [PASS] At least one Codex skill — found 6: .agents/skills/bootstrap-kit/SKILL.md, .agents/skills/docs-drift/SKILL.md, .agents/skills/issue-triage/SKILL.md, .agents/skills/oss-ready/SKILL.md, .agents/skills/pr-first-pass/SKILL.md, .agents/skills/release-notes/SKILL.md
 [PASS] Skills use a recommended layout — 6 in .agents/skills or skills
 [PASS] Recent git activity — last commit 0.0 days ago
-[PASS] Maintenance is not a one-night dump — 16 commit(s) spanning 0.1 days
+[PASS] Commit history has a time span — 18 commit(s) spanning 0.1 days
 
 13 passed, 0 warning(s), 0 failing

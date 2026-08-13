@@ -16,7 +16,7 @@ Examples of unacceptable behavior:
 
 - Harassment, insults, or personal attacks
 - Publishing others' private information
-- Using this project to spam, farm stars, or file false maintainer claims
+- Spam, or impersonating another project or maintainer
 
 ## Enforcement
 

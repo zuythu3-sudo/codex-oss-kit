@@ -7,7 +7,7 @@
 
 Local Codex skills for people who maintain a public repository.
 
-The kit follows the same shape OpenAI documented for OSS maintenance: `AGENTS.md`, repo-local skills, and optional GitHub Actions. It does not call the OpenAI API. It does not post to GitHub unless a human approves the exact text.
+It uses the usual Codex layout: `AGENTS.md`, repo-local skills, and an optional GitHub Action. The checkers run locally. They do not post to GitHub unless a human approves the exact text.
 
 ## What it is for
 
@@ -62,22 +62,21 @@ Existing `AGENTS.md` and skill folders are left alone unless you pass `--force`.
 - uses: actions/checkout@v7
   with:
     fetch-depth: 0
-- uses: zuythu3-sudo/codex-oss-kit@v0.3.2
+- uses: zuythu3-sudo/codex-oss-kit@v0.3.3
   with:
     checks: all
     lang: auto
 ```
 
-`checks` is `all`, `oss-ready`, or `docs-drift`. `lang` is `auto`, `en`, or `zh`. Reports appear in the job summary. The Action does not need an OpenAI API key.
+`checks` is `all`, `oss-ready`, or `docs-drift`. `lang` is `auto`, `en`, or `zh`. Reports appear in the job summary. The Action does not call a model API.
 
 A copy-paste workflow is in [`examples/maintainer-check.yml`](examples/maintainer-check.yml).
 
-## What this is not
+## Scope
 
-- Not an official OpenAI product
-- Not a way to auto-qualify for any OpenAI program
-- Not a scanner for private repositories you do not own
-- Not a bot that comments, labels, or merges without review
+- Local read-only checks and draft text
+- Only for repositories you own or are authorized to maintain
+- GitHub comments, labels, and releases stay human-gated
 
 ## Used by
 

@@ -35,5 +35,5 @@ Node.js 18+ is required. There are no production npm dependencies.
 
 - Skills may only inspect repositories the operator owns or is authorized to review.
 - Do not scan private repositories without permission.
-- Do not invent install counts, stars, or user quotes.
+- Do not fabricate metrics or testimonials.
 - Keep GitHub writes human-gated.

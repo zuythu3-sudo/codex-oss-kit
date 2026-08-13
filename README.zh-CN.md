@@ -7,7 +7,7 @@
 
 给开源维护者用的本地 Codex 技能包。
 
-它按 OpenAI 公开过的维护方式组织：`AGENTS.md`、仓库内 skills、可选 GitHub Actions。不调用 OpenAI API。未经人确认具体文本，不会发到 GitHub。
+沿用常见的 Codex 仓库布局：`AGENTS.md`、仓库内 skills、可选 GitHub Action。检查在本地跑。未经人确认具体文本，不会发到 GitHub。
 
 ## 用来干什么
 
@@ -62,20 +62,19 @@ npx --yes github:zuythu3-sudo/codex-oss-kit -- /path/to/your/repo --lang zh
 - uses: actions/checkout@v7
   with:
     fetch-depth: 0
-- uses: zuythu3-sudo/codex-oss-kit@v0.3.2
+- uses: zuythu3-sudo/codex-oss-kit@v0.3.3
   with:
     checks: all
     lang: zh
 ```
 
-不需要 OpenAI API key。报告出现在 Actions 摘要里。
+不调用模型 API。报告出现在 Actions 摘要里。
 
-## 这不是什么
+## 范围
 
-- 不是 OpenAI 官方产品
-- 不能自动通过任何 OpenAI 计划
-- 不是用来扫别人私有仓库的
-- 不是无人值守的评论/合并机器人
+- 本地只读检查和草稿文本
+- 只用于你拥有或有权维护的仓库
+- GitHub 评论、标签和发版仍由人确认
 
 ## 谁在用
 

@@ -1,6 +1,6 @@
 ---
 name: oss-ready
-description: Audit a public repository for open-source maintainer readiness (license, README, SECURITY, AGENTS.md, issue templates, Codex skills, recent git activity). Use when the user asks if a repo is ready to publish, ready for Codex for Open Source, missing hygiene files, or needs an OSS checklist.
+description: Audit a public repository for open-source maintainer readiness (license, README, SECURITY, AGENTS.md, issue templates, Codex skills, recent git activity). Use when the user asks if a repo is ready to publish, missing hygiene files, or needs an OSS checklist.
 ---
 
 # oss-ready
@@ -10,12 +10,12 @@ Run a local, read-only audit of maintainer-readiness signals.
 ## When to use
 
 - Before tagging a release
-- Before citing the repository in an application or README
+- Before sharing the repository publicly
 - When the user asks "is this repo ready?" or "what files are we missing?"
 
 ## Do not use
 
-- To invent stars, users, or install counts
+- To invent usage numbers
 - To scan a repository you do not own or lack permission to review
 - As a substitute for a security review
 

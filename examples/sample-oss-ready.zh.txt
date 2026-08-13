@@ -2,7 +2,7 @@ codex-oss-kit oss-ready
 根目录: /path/to/repo
 
 [通过] 开源许可证 — 已找到 LICENSE
-[通过] 有实质内容的 README — README.md 共 3181 个字符
+[通过] 有实质内容的 README — README.md 共 3188 个字符
 [通过] 贡献指南 — 已找到 CONTRIBUTING.md
 [通过] 安全政策 — 已找到 SECURITY.md
 [通过] Codex 仓库说明 AGENTS.md — 已找到 AGENTS.md
@@ -13,6 +13,6 @@ codex-oss-kit oss-ready
 [通过] 至少一个 Codex skill — 已找到 6 个：.agents/skills/bootstrap-kit/SKILL.md, .agents/skills/docs-drift/SKILL.md, .agents/skills/issue-triage/SKILL.md, .agents/skills/oss-ready/SKILL.md, .agents/skills/pr-first-pass/SKILL.md, .agents/skills/release-notes/SKILL.md
 [通过] Skill 使用推荐目录 — 6 个位于 .agents/skills 或 skills
 [通过] 近期 git 活动 — 上次提交在 0.0 天前
-[通过] 维护记录不是一夜堆出来的 — 16 次提交，跨度 0.1 天
+[通过] 提交历史有时间跨度 — 18 次提交，跨度 0.1 天
 
 13 项通过，0 项警告，0 项失败
