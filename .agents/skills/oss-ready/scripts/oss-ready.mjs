@@ -55,18 +55,65 @@ function firstExisting(names) {
   return names.find((name) => exists(name)) ?? null;
 }
 
-function listSkillManifests() {
-  const skillsRoot = path.join(root, ".agents", "skills");
-  if (!fs.existsSync(skillsRoot)) return [];
+const SKIP_DIRS = new Set([
+  "node_modules",
+  ".git",
+  "dist",
+  "build",
+  "coverage",
+  ".tmp",
+  "tmp",
+  "temp",
+  "vendor",
+]);
+const ALLOW_DOT_DIRS = new Set([".agents", ".claude"]);
+const MAX_SKILL_DEPTH = 4;
+const CANONICAL_SKILL = /^(?:\.agents\/)?skills\/[^/]+\/SKILL\.md$/;
 
+/**
+ * @param {string} relative
+ */
+function isCanonicalSkill(relative) {
+  return CANONICAL_SKILL.test(relative);
+}
+
+/**
+ * @param {string} dir
+ * @param {number} depth
+ * @param {string} rel
+ * @param {string[]} out
+ */
+function walkSkillFiles(dir, depth, rel, out) {
+  if (depth > MAX_SKILL_DEPTH) return;
+  let entries;
+  try {
+    entries = fs.readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  for (const entry of entries) {
+    if (SKIP_DIRS.has(entry.name)) continue;
+    if (entry.name.startsWith(".") && !ALLOW_DOT_DIRS.has(entry.name)) continue;
+    const nextRel = rel ? `${rel}/${entry.name}` : entry.name;
+    const nextPath = path.join(dir, entry.name);
+    if (entry.isFile() && entry.name === "SKILL.md") {
+      out.push(nextRel);
+    } else if (entry.isDirectory()) {
+      walkSkillFiles(nextPath, depth + 1, nextRel, out);
+    }
+  }
+}
+
+function listSkillManifests() {
   /** @type {string[]} */
   const found = [];
-  for (const entry of fs.readdirSync(skillsRoot, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    const skillMd = path.join(skillsRoot, entry.name, "SKILL.md");
-    if (fs.existsSync(skillMd)) found.push(`.agents/skills/${entry.name}/SKILL.md`);
-  }
-  return found;
+  walkSkillFiles(root, 0, "", found);
+  found.sort();
+  return {
+    all: found,
+    canonical: found.filter((item) => isCanonicalSkill(item)),
+    alternate: found.filter((item) => !isCanonicalSkill(item)),
+  };
 }
 
 function lastCommitAgeDays() {
@@ -223,9 +270,36 @@ const checks = [
     level: FAIL,
     run() {
       const skills = listSkillManifests();
-      return skills.length > 0
-        ? { ok: true, detail: `found ${skills.length}: ${skills.join(", ")}` }
-        : { ok: false, detail: "no .agents/skills/*/SKILL.md files" };
+      if (skills.all.length === 0) {
+        return {
+          ok: false,
+          detail: "no SKILL.md under .agents/skills, skills, or other skill folders",
+        };
+      }
+      const preview = skills.all.slice(0, 8).join(", ");
+      const extra = skills.all.length > 8 ? ` (+${skills.all.length - 8} more)` : "";
+      return { ok: true, detail: `found ${skills.all.length}: ${preview}${extra}` };
+    },
+  },
+  {
+    id: "skills-layout",
+    title: "Skills use a recommended layout",
+    level: WARN,
+    run() {
+      const skills = listSkillManifests();
+      if (skills.all.length === 0) {
+        return { ok: true, detail: "no skills to place" };
+      }
+      if (skills.canonical.length > 0) {
+        return {
+          ok: true,
+          detail: `${skills.canonical.length} in .agents/skills or skills`,
+        };
+      }
+      return {
+        ok: false,
+        detail: `found ${skills.alternate.length} SKILL.md outside .agents/skills or skills`,
+      };
     },
   },
   {

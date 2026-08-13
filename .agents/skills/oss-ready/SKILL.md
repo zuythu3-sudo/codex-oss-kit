@@ -56,3 +56,4 @@ Failing checks mean the repository is not ready. Warnings are allowed, but say w
 - Quote the checker output. Do not paraphrase away a failure.
 - If git history is a single dump, say so. That is a real maintainer signal.
 - Never claim the repository is ready while any `fail` check remains.
+- A `SKILL.md` under `.agents/skills/<name>/` or `skills/<name>/` is a recommended layout. Other `SKILL.md` files still count, but report the layout warning.

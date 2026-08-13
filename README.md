@@ -8,7 +8,7 @@ The kit follows the same shape OpenAI documented for OSS maintenance: `AGENTS.md
 
 | Skill | What it does | Kind |
 | --- | --- | --- |
-| `$oss-ready` | Audit license, README, SECURITY, AGENTS.md, templates, skills, git activity | Script |
+| `$oss-ready` | Audit license, README, SECURITY, AGENTS.md, templates, skills, git activity. Accepts `.agents/skills`, `skills`, and other nearby `SKILL.md` layouts | Script |
 | `$docs-drift` | Check README `npm` / `node` commands against this repository | Script |
 | `$issue-triage` | Draft labels and a first reply for a new issue | Draft only |
 | `$pr-first-pass` | Summarize a PR, list risks, say if a human must look | Draft only |

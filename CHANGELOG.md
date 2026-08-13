@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1 — 2026-08-13
+
+### Changed
+
+- `$oss-ready` now counts `SKILL.md` under `.agents/skills`, `skills`, and other nearby skill folders
+- Non-recommended layouts are a warning, not a failure
+
 ## 0.1.0 — 2026-08-13
 
 ### Added

@@ -66,3 +66,37 @@ test("complete file set passes fail-level checks", () => {
   const failed = report.checks.filter((item) => item.status === "fail");
   assert.deepEqual(failed, []);
 });
+
+function hygieneFiles(root) {
+  write(root, "LICENSE", "MIT\n");
+  write(root, "README.md", `${"A public maintainer kit. ".repeat(20)}\n`);
+  write(root, "CONTRIBUTING.md");
+  write(root, "SECURITY.md");
+  write(root, "AGENTS.md", "# agents\n");
+}
+
+function skillCheck(root, id) {
+  const result = run(root, ["--json"]);
+  const report = JSON.parse(result.stdout);
+  return report.checks.find((item) => item.id === id);
+}
+
+test("skills/name/SKILL.md counts as a Codex skill", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "oss-ready-skills-dir-"));
+  hygieneFiles(root);
+  write(root, "skills/demo/SKILL.md", "---\nname: demo\ndescription: demo\n---\n");
+  const skills = skillCheck(root, "skills");
+  const layout = skillCheck(root, "skills-layout");
+  assert.equal(skills.status, "pass");
+  assert.equal(layout.status, "pass");
+});
+
+test("top-level skill folders pass with a layout warning", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "oss-ready-alt-skill-"));
+  hygieneFiles(root);
+  write(root, "review-swarm/SKILL.md", "---\nname: review-swarm\ndescription: demo\n---\n");
+  const skills = skillCheck(root, "skills");
+  const layout = skillCheck(root, "skills-layout");
+  assert.equal(skills.status, "pass");
+  assert.equal(layout.status, "warn");
+});
