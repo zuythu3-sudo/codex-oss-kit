@@ -2,106 +2,90 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-Codex skills for people who actually maintain a public repository.
+[![CI](https://github.com/zuythu3-sudo/codex-oss-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/zuythu3-sudo/codex-oss-kit/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-The kit follows the same shape OpenAI documented for OSS maintenance: `AGENTS.md`, repo-local skills, and optional GitHub Actions. It is not a ChatGPT wrapper and not an application-form generator.
+Local Codex skills for people who maintain a public repository.
 
-This kit includes six skills. Three ship with a real local script. The others draft GitHub text or install the kit, and they refuse to overwrite or post unless you say so.
+The kit follows the same shape OpenAI documented for OSS maintenance: `AGENTS.md`, repo-local skills, and optional GitHub Actions. It does not call the OpenAI API. It does not post to GitHub unless a human approves the exact text.
 
-| Skill | What it does | Kind |
+## What it is for
+
+Open-source maintenance is repetitive: check that the repo still looks maintained, check that the README still tells the truth, triage an issue, glance at a PR, draft a changelog. This kit turns those jobs into small, testable workflows.
+
+| Skill | Job | Kind |
 | --- | --- | --- |
-| `$oss-ready` | Audit license, README, SECURITY, AGENTS.md, templates, skills, git activity. Accepts `.agents/skills`, `skills`, and other nearby `SKILL.md` layouts | Script |
-| `$docs-drift` | Check README commands against this repository: npm/yarn/pnpm/bun, node, python, make, cargo, go, local scripts | Script |
-| `$issue-triage` | Draft labels and a first reply for a new issue | Draft only |
-| `$pr-first-pass` | Summarize a PR, list risks, say if a human must look | Draft only |
+| `$oss-ready` | Audit license, README, security policy, `AGENTS.md`, templates, skills, and git activity | Local script |
+| `$docs-drift` | Check README commands against npm/yarn/pnpm/bun, Node, Python, Make, Cargo, Go, and local scripts | Local script |
+| `$issue-triage` | Draft labels and a first reply | Draft only |
+| `$pr-first-pass` | Summarize a PR and list risks | Draft only |
 | `$release-notes` | Draft changelog text from git history | Draft only |
-| `$bootstrap-kit` | Copy skills into another repo and draft `AGENTS.md` if missing | Script |
-
-## Requirements
-
-- Node.js 18 or newer
-- Git, if you want activity checks
-
-There are no production npm dependencies.
+| `$bootstrap-kit` | Install the skills into another checkout you own | Local script |
 
 ## Quick start
 
-From this repository:
+Requires Node.js 18+.
 
 ```bash
 npm test
-npm run oss-ready
-npm run docs-drift
+npm run check
 ```
 
 Chinese or English reports:
 
 ```bash
 node .agents/skills/oss-ready/scripts/oss-ready.mjs . --lang zh
-node .agents/skills/docs-drift/scripts/docs-drift.mjs . --lang en
+node .agents/skills/oss-ready/scripts/oss-ready.mjs . --lang en
 ```
 
-`--lang` accepts `en` or `zh`. If you omit it, the tools follow `LANG` / `LC_ALL` (Chinese locales print Chinese). JSON reports stay in English.
+`--lang` accepts `en` or `zh`. If omitted, the tools follow `LANG` / `LC_ALL`. JSON output stays English so scripts can rely on it.
 
-```bash
-node .agents/skills/oss-ready/scripts/oss-ready.mjs . --json
-node .agents/skills/docs-drift/scripts/docs-drift.mjs . --json
+Example:
+
+```text
+[PASS] Open-source license — found LICENSE
+[PASS] README with a real description — README.md is 4177 characters
+[WARN] Maintenance is not a one-night dump — 14 commit(s) spanning 0.1 days
 ```
 
-## Use the skills in Codex
+## Install into another repository
 
-Install into another checkout you own:
+Only use this on a repository you own or are authorized to maintain.
 
 ```bash
-node .agents/skills/bootstrap-kit/scripts/bootstrap-kit.mjs /path/to/your/repo
 npx --yes github:zuythu3-sudo/codex-oss-kit -- /path/to/your/repo --dry-run
+npx --yes github:zuythu3-sudo/codex-oss-kit -- /path/to/your/repo --lang zh
 ```
 
-Preview first:
-
-```bash
-node .agents/skills/bootstrap-kit/scripts/bootstrap-kit.mjs /path/to/your/repo --dry-run
-```
-
-That copies `$oss-ready`, `$docs-drift`, `$issue-triage`, `$pr-first-pass`, and `$release-notes` into `.agents/skills`. It writes `AGENTS.md` only when that file is missing. Existing files stay put unless you pass `--force`.
-
-Then, in Codex, run `$oss-ready` in the target repository.
-
-If you use `$skill-installer`, you can still point it at a single skill directory such as `https://github.com/zuythu3-sudo/codex-oss-kit/tree/main/.agents/skills/oss-ready`.
+Existing `AGENTS.md` and skill folders are left alone unless you pass `--force`. The installer refuses to copy the kit into itself.
 
 ## GitHub Action
-
-Other public repositories can run the same checkers without copying scripts:
 
 ```yaml
 - uses: actions/checkout@v7
   with:
     fetch-depth: 0
-- uses: zuythu3-sudo/codex-oss-kit@v0.2.0
+- uses: zuythu3-sudo/codex-oss-kit@v0.3.0
   with:
     checks: all
     lang: auto
 ```
 
-`checks` can be `all`, `oss-ready`, or `docs-drift`. `lang` can be `auto`, `en`, or `zh`. Reports also appear in the GitHub Actions job summary. This Action does not call the OpenAI API.
+`checks` is `all`, `oss-ready`, or `docs-drift`. `lang` is `auto`, `en`, or `zh`. Reports appear in the job summary. The Action does not need an OpenAI API key.
 
-This repository dogfoods that Action in `.github/workflows/ci.yml`. A copy-paste workflow is in `examples/maintainer-check.yml`.
-
-`examples/pr-first-pass-action.yml` is a commented template for running `$pr-first-pass` through the official [`openai/codex-action`](https://github.com/openai/codex-action). Copy it only if you have an API key and permission to review that repository.
+A copy-paste workflow is in [`examples/maintainer-check.yml`](examples/maintainer-check.yml).
 
 ## What this is not
 
 - Not an official OpenAI product
-- Not a way to auto-approve Codex for Open Source
-- Not a scanner for other people's private repositories
-- Not a star-farming or application-essay kit
-
-If you use these skills on GitHub, a human must approve the exact comment, label, or release text.
+- Not a way to auto-qualify for any OpenAI program
+- Not a scanner for private repositories you do not own
+- Not a bot that comments, labels, or merges without review
 
 ## Used by
 
-- [zuythu3-sudo/codex-oss-kit](https://github.com/zuythu3-sudo/codex-oss-kit) — this repository
-- [zuythu3-sudo/repropack](https://github.com/zuythu3-sudo/repropack) — CI runs `codex-oss-kit` on every push
+- [zuythu3-sudo/codex-oss-kit](https://github.com/zuythu3-sudo/codex-oss-kit)
+- [zuythu3-sudo/repropack](https://github.com/zuythu3-sudo/repropack)
 
 ## License
 

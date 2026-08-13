@@ -3,7 +3,7 @@
  * Check README commands against files and package manifests in this repository.
  *
  * Usage:
- *   node docs-drift.mjs [path] [--json]
+ *   node docs-drift.mjs [path] [--json] [--lang en|zh]
  *
  * Checks local npm/yarn/pnpm/bun scripts, relative interpreter files,
  * Makefile targets, Cargo/Go manifests, and local script paths.
@@ -162,10 +162,22 @@ function firstToken(command) {
  * @param {string} name
  * @param {Record<string, string>} scripts
  */
+function pair(en, zh) {
+  return { en, zh };
+}
+
+function existsText(name) {
+  return pair(`${name} exists`, `${name} 存在`);
+}
+
+function missingText(name) {
+  return pair(`${name} does not exist`, `${name} 不存在`);
+}
+
 function scriptCheck(name, scripts) {
   return scripts[name]
-    ? { kind: "pkg-run", ok: true, detail: "package.json scripts." + name + " exists" }
-    : { kind: "pkg-run", ok: false, detail: "package.json has no scripts." + name };
+    ? { kind: "pkg-run", ok: true, text: pair(`package.json scripts.${name} exists`, `package.json 中存在 scripts.${name}`) }
+    : { kind: "pkg-run", ok: false, text: pair(`package.json has no scripts.${name}`, `package.json 没有 scripts.${name}`) };
 }
 
 /**
@@ -183,14 +195,14 @@ function inspect(command, scripts, targets) {
     const bunProject =
       existsHere("package.json") || existsHere("bun.lockb") || existsHere("bun.lock");
     return bunProject
-      ? { kind: "bun-test", ok: true, detail: "bun test does not require scripts.test" }
-      : { kind: "bun-test", ok: false, detail: "no package.json, bun.lock, or bun.lockb" };
+      ? { kind: "bun-test", ok: true, text: pair("bun test does not require scripts.test", "bun test 不需要 scripts.test") }
+      : { kind: "bun-test", ok: false, text: pair("no package.json, bun.lock, or bun.lockb", "没有 package.json、bun.lock 或 bun.lockb") };
   }
 
   if (/^(?:npm(?:\.cmd)?|yarn|pnpm)\s+test\b/.test(command)) {
     return scripts.test
-      ? { kind: "pkg-test", ok: true, detail: "package.json scripts.test exists" }
-      : { kind: "pkg-test", ok: false, detail: "package.json has no scripts.test" };
+      ? { kind: "pkg-test", ok: true, text: pair("package.json scripts.test exists", "package.json 中存在 scripts.test") }
+      : { kind: "pkg-test", ok: false, text: pair("package.json has no scripts.test", "package.json 没有 scripts.test") };
   }
 
   const npmTokens = command.split(/\s+/);
@@ -199,8 +211,8 @@ function inspect(command, scripts, targets) {
   if (life === "start" || life === "stop" || life === "restart") {
     if (life === "restart") {
       return scripts.restart || scripts.start
-        ? { kind: "pkg-run", ok: true, detail: "package.json scripts.restart or scripts.start exists" }
-        : { kind: "pkg-run", ok: false, detail: "package.json has no scripts.restart or scripts.start" };
+        ? { kind: "pkg-run", ok: true, text: pair("package.json scripts.restart or scripts.start exists", "package.json 中存在 scripts.restart 或 scripts.start") }
+        : { kind: "pkg-run", ok: false, text: pair("package.json has no scripts.restart or scripts.start", "package.json 没有 scripts.restart 或 scripts.start") };
     }
     return scriptCheck(life, scripts);
   }
@@ -210,7 +222,7 @@ function inspect(command, scripts, targets) {
     /^pip(?:3)?\s+install\s+(?!-r\b)/.test(command) ||
     /^uv\s+pip\s+install\s+(?!-r\b)/.test(command)
   ) {
-    return { kind: "pkg-install", ok: true, detail: "install command, not a repo script" };
+    return { kind: "pkg-install", ok: true, text: pair("install command, not a repo script", "安装命令，不是仓库脚本") };
   }
 
   const pkgShorthand = command.match(/^(?:yarn|pnpm|bun)\s+([A-Za-z0-9:_-]+)/);
@@ -225,8 +237,8 @@ function inspect(command, scripts, targets) {
   if (pipReq) {
     const file = pipReq[1];
     return existsHere(file)
-      ? { kind: "pip-requirements", ok: true, detail: `${file} exists` }
-      : { kind: "pip-requirements", ok: false, detail: `${file} does not exist` };
+      ? { kind: "pip-requirements", ok: true, text: existsText(file) }
+      : { kind: "pip-requirements", ok: false, text: missingText(file) };
   }
 
   const nodeFile = command.match(
@@ -235,11 +247,11 @@ function inspect(command, scripts, targets) {
   if (nodeFile) {
     const relative = nodeFile[1] || nodeFile[2] || nodeFile[3];
     if (!resolveLocal(relative)) {
-      return { kind: "node-file", ok: true, detail: "non-local node target, skipped" };
+      return { kind: "node-file", ok: true, text: pair("non-local node target, skipped", "非本地 node 目标，已跳过") };
     }
     return existsHere(relative)
-      ? { kind: "node-file", ok: true, detail: `${relative} exists` }
-      : { kind: "node-file", ok: false, detail: `${relative} does not exist` };
+      ? { kind: "node-file", ok: true, text: existsText(relative) }
+      : { kind: "node-file", ok: false, text: missingText(relative) };
   }
 
   const pyFile = command.match(
@@ -248,41 +260,41 @@ function inspect(command, scripts, targets) {
   if (pyFile) {
     const relative = pyFile[1] || pyFile[2] || pyFile[3];
     if (!resolveLocal(relative)) {
-      return { kind: "python-file", ok: true, detail: "non-local python target, skipped" };
+      return { kind: "python-file", ok: true, text: pair("non-local python target, skipped", "非本地 python 目标，已跳过") };
     }
     return existsHere(relative)
-      ? { kind: "python-file", ok: true, detail: `${relative} exists` }
-      : { kind: "python-file", ok: false, detail: `${relative} does not exist` };
+      ? { kind: "python-file", ok: true, text: existsText(relative) }
+      : { kind: "python-file", ok: false, text: missingText(relative) };
   }
 
   if (/^(?:python3?|py(?:\s+-3)?)\s+-m\s+pytest\b/.test(command) || /^pytest\b/.test(command)) {
     return hasPythonTests()
-      ? { kind: "pytest", ok: true, detail: "python test layout exists" }
-      : { kind: "pytest", ok: false, detail: "no pytest.ini, conftest.py, pytest config, or Python test files" };
+      ? { kind: "pytest", ok: true, text: pair("python test layout exists", "已找到 Python 测试布局") }
+      : { kind: "pytest", ok: false, text: pair("no pytest.ini, conftest.py, pytest config, or Python test files", "没有 pytest.ini、conftest.py、pytest 配置或 Python 测试文件") };
   }
 
   const makeTarget = command.match(/^make\s+([A-Za-z0-9._-]+)/);
   if (makeTarget) {
     const name = makeTarget[1];
     if (targets.size === 0) {
-      return { kind: "make", ok: false, detail: `no Makefile, cannot run make ${name}` };
+      return { kind: "make", ok: false, text: pair(`no Makefile, cannot run make ${name}`, `没有 Makefile，无法执行 make ${name}`) };
     }
     return targets.has(name)
-      ? { kind: "make", ok: true, detail: `Makefile has target ${name}` }
-      : { kind: "make", ok: false, detail: `Makefile has no target ${name}` };
+      ? { kind: "make", ok: true, text: pair(`Makefile has target ${name}`, `Makefile 有目标 ${name}`) }
+      : { kind: "make", ok: false, text: pair(`Makefile has no target ${name}`, `Makefile 没有目标 ${name}`) };
   }
   if (/^make\s*$/.test(command)) {
     return fs.existsSync(path.join(root, "Makefile")) ||
       fs.existsSync(path.join(root, "makefile")) ||
       fs.existsSync(path.join(root, "GNUmakefile"))
-      ? { kind: "make", ok: true, detail: "Makefile exists" }
-      : { kind: "make", ok: false, detail: "no Makefile" };
+      ? { kind: "make", ok: true, text: pair("Makefile exists", "已找到 Makefile") }
+      : { kind: "make", ok: false, text: pair("no Makefile", "没有 Makefile") };
   }
 
   if (/^cargo\s+(?:test|build|run|check|clippy|fmt)\b/.test(command)) {
     return fs.existsSync(path.join(root, "Cargo.toml"))
-      ? { kind: "cargo", ok: true, detail: "Cargo.toml exists" }
-      : { kind: "cargo", ok: false, detail: "no Cargo.toml" };
+      ? { kind: "cargo", ok: true, text: pair("Cargo.toml exists", "已找到 Cargo.toml") }
+      : { kind: "cargo", ok: false, text: pair("no Cargo.toml", "没有 Cargo.toml") };
   }
 
   const goRun = command.match(/^go\s+run\s+(\S+)/);
@@ -290,19 +302,19 @@ function inspect(command, scripts, targets) {
     const target = goRun[1];
     if (target.startsWith(".")) {
       return existsHere(target)
-        ? { kind: "go-run", ok: true, detail: `${target} exists` }
-        : { kind: "go-run", ok: false, detail: `${target} does not exist` };
+        ? { kind: "go-run", ok: true, text: existsText(target) }
+        : { kind: "go-run", ok: false, text: missingText(target) };
     }
     if (target.endsWith(".go")) {
       return existsHere(target)
-        ? { kind: "go-run", ok: true, detail: `${target} exists` }
-        : { kind: "go-run", ok: false, detail: `${target} does not exist` };
+        ? { kind: "go-run", ok: true, text: existsText(target) }
+        : { kind: "go-run", ok: false, text: missingText(target) };
     }
   }
   if (/^go\s+(?:test|build|vet|mod)\b/.test(command)) {
     return fs.existsSync(path.join(root, "go.mod"))
-      ? { kind: "go", ok: true, detail: "go.mod exists" }
-      : { kind: "go", ok: false, detail: "no go.mod" };
+      ? { kind: "go", ok: true, text: pair("go.mod exists", "已找到 go.mod") }
+      : { kind: "go", ok: false, text: pair("no go.mod", "没有 go.mod") };
   }
 
   const script = command.match(
@@ -311,46 +323,18 @@ function inspect(command, scripts, targets) {
   if (script) {
     const relative = script[1] || script[2] || script[3];
     return existsHere(relative)
-      ? { kind: "shell-script", ok: true, detail: `${relative} exists` }
-      : { kind: "shell-script", ok: false, detail: `${relative} does not exist` };
+      ? { kind: "shell-script", ok: true, text: existsText(relative) }
+      : { kind: "shell-script", ok: false, text: missingText(relative) };
   }
 
   const token = firstToken(command);
   if (token.startsWith("./") || token.startsWith(".\\")) {
     return existsHere(token)
-      ? { kind: "local-bin", ok: true, detail: `${token} exists` }
-      : { kind: "local-bin", ok: false, detail: `${token} does not exist` };
+      ? { kind: "local-bin", ok: true, text: existsText(token) }
+      : { kind: "local-bin", ok: false, text: missingText(token) };
   }
 
-  return { kind: "ignored", ok: true, detail: "not a local script or project command" };
-}
-
-function localizeDetail(detail) {
-  if (lang !== "zh") return detail;
-  return detail
-    .replace(/^package\.json scripts\.(\S+) exists$/, "package.json 中存在 scripts.$1")
-    .replace(/^package\.json has no scripts\.(\S+)$/, "package.json 没有 scripts.$1")
-    .replace(/^package\.json scripts\.test exists$/, "package.json 中存在 scripts.test")
-    .replace(/^package\.json has no scripts\.test$/, "package.json 没有 scripts.test")
-    .replace("install command, not a repo script", "安装命令，不是仓库脚本")
-    .replace("non-local node target, skipped", "非本地 node 目标，已跳过")
-    .replace("non-local python target, skipped", "非本地 python 目标，已跳过")
-    .replace("python test layout exists", "已找到 Python 测试布局")
-    .replace("no pytest.ini, conftest.py, pytest config, or Python test files", "没有 pytest.ini、conftest.py、pytest 配置或 Python 测试文件")
-    .replace(/^no Makefile, cannot run make (\S+)$/, "没有 Makefile，无法执行 make $1")
-    .replace(/^Makefile has target (\S+)$/, "Makefile 有目标 $1")
-    .replace(/^Makefile has no target (\S+)$/, "Makefile 没有目标 $1")
-    .replace("Makefile exists", "已找到 Makefile")
-    .replace("no Makefile", "没有 Makefile")
-    .replace("Cargo.toml exists", "已找到 Cargo.toml")
-    .replace("no Cargo.toml", "没有 Cargo.toml")
-    .replace("go.mod exists", "已找到 go.mod")
-    .replace("no go.mod", "没有 go.mod")
-    .replace("bun test does not require scripts.test", "bun test 不需要 scripts.test")
-    .replace("no package.json, bun.lock, or bun.lockb", "没有 package.json、bun.lock 或 bun.lockb")
-    .replace("not a local script or project command", "不是本地脚本或项目命令")
-    .replace(/ does not exist$/, " 不存在")
-    .replace(/ exists$/, " 存在");
+  return { kind: "ignored", ok: true, text: pair("not a local script or project command", "不是本地脚本或项目命令") };
 }
 
 function main() {
@@ -375,7 +359,13 @@ function main() {
   const commands = extractFencedCommands(readme.text);
   const findings = commands.map((command) => {
     const result = inspect(command, scripts, targets);
-    return { command, ...result };
+    return {
+      command,
+      kind: result.kind,
+      ok: result.ok,
+      detail: result.text.en,
+      text: result.text,
+    };
   });
 
   const checked = findings.filter((item) => item.kind !== "ignored");
@@ -392,7 +382,7 @@ function main() {
       checked: checked.length,
       fail: failed.length,
     },
-    findings,
+    findings: findings.map(({ command, kind, ok, detail }) => ({ command, kind, ok, detail })),
   };
 
   if (jsonMode) {
@@ -411,7 +401,7 @@ function main() {
     for (const item of findings) {
       if (item.kind === "ignored") continue;
       const mark = item.ok ? (lang === "zh" ? "通过" : "PASS") : lang === "zh" ? "失败" : "FAIL";
-      process.stdout.write(`[${mark}] ${item.command} — ${localizeDetail(item.detail)}\n`);
+      process.stdout.write(`[${mark}] ${item.command} — ${t(lang, item.text)}\n`);
     }
     process.stdout.write(
       lang === "zh"

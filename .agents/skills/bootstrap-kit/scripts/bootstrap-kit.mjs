@@ -172,6 +172,15 @@ function main() {
   if (!fs.existsSync(target) || !fs.statSync(target).isDirectory()) {
     fail(t(lang, { en: `Not a directory: ${target}`, zh: `不是目录：${target}` }));
   }
+  const kitRoot = path.resolve(kitSkillsRoot, "..", "..");
+  if (target === kitRoot) {
+    fail(
+      t(lang, {
+        en: "Refusing to install the kit into its own repository.",
+        zh: "拒绝把工具包装进它自己的仓库。",
+      }),
+    );
+  }
 
   const shared = copyShared(target);
   const skills = [

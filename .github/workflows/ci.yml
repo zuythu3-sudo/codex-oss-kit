@@ -13,17 +13,41 @@ permissions:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} / Node ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+        node:
+          - 20
+          - 22
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: ${{ matrix.node }}
       - name: Test
         run: npm test
       - name: Maintainer checks
+        if: runner.os != 'Windows'
         uses: ./
         with:
           checks: all
+          lang: en
+
+  action-zh:
+    name: Action summary (zh)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: ./
+        with:
+          checks: all
+          lang: zh

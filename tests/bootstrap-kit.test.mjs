@@ -52,6 +52,29 @@ test("existing AGENTS.md is left alone without --force", () => {
   assert.equal(fs.readFileSync(path.join(root, "AGENTS.md"), "utf8"), "# keep me\n");
 });
 
+test("refuses to install into the kit repository itself", () => {
+  const result = run(repoRoot, ["--json", "--lang", "en"]);
+  assert.equal(result.status, 1);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.ok, false);
+  assert.match(report.error, /own repository/i);
+});
+
+test("copied skills can run oss-ready from the destination", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "bootstrap-e2e-"));
+  fs.writeFileSync(path.join(root, "LICENSE"), "MIT\n");
+  fs.writeFileSync(path.join(root, "README.md"), `${"A public maintainer kit. ".repeat(20)}\n`);
+  fs.writeFileSync(path.join(root, "CONTRIBUTING.md"), "ok\n");
+  fs.writeFileSync(path.join(root, "SECURITY.md"), "ok\n");
+  const boot = run(root, ["--json"]);
+  assert.equal(boot.status, 0, boot.stderr || boot.stdout);
+  const checker = path.join(root, ".agents/skills/oss-ready/scripts/oss-ready.mjs");
+  const result = spawnSync(process.execPath, [checker, root, "--json"], { encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.ok, true);
+});
+
 test("--lang zh drafts a Chinese AGENTS.md", () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "bootstrap-zh-"));
   const result = run(root, ["--json", "--lang", "zh"]);

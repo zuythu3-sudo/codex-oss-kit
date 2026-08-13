@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0 — 2026-08-13
+
+### Added
+
+- Cross-platform CI on Ubuntu and Windows, Node 20 and 22
+- `npm run check`
+- Installer refuses to copy the kit into itself
+- Shared i18n tests and a bootstrap end-to-end run
+
+### Changed
+
+- `$docs-drift` localizes through real string pairs, not regex replacements
+- README rewritten around the maintainer job, not the installer trivia
+
 ## 0.2.0 — 2026-08-13
 
 ### Added

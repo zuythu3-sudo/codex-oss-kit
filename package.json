@@ -1,6 +1,6 @@
 {
   "name": "codex-oss-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": false,
   "description": "Codex plugin for open-source maintainers: issue triage, PR first-pass, release notes, docs drift, and OSS readiness.",
   "type": "module",
@@ -18,10 +18,16 @@
     "oss-ready": "node .agents/skills/oss-ready/scripts/oss-ready.mjs .",
     "docs-drift": "node .agents/skills/docs-drift/scripts/docs-drift.mjs .",
     "bootstrap": "node .agents/skills/bootstrap-kit/scripts/bootstrap-kit.mjs",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --test tests/*.test.mjs && node .agents/skills/oss-ready/scripts/oss-ready.mjs . && node .agents/skills/docs-drift/scripts/docs-drift.mjs ."
+  },
+  "homepage": "https://github.com/zuythu3-sudo/codex-oss-kit",
+  "bugs": {
+    "url": "https://github.com/zuythu3-sudo/codex-oss-kit/issues"
   },
   "files": [
     ".agents/skills",
+    "action.yml",
     "examples",
     "README.md",
     "README.zh-CN.md",
