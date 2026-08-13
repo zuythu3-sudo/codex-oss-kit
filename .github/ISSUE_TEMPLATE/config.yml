@@ -1,5 +1,5 @@
 blank_issues_enabled: true
 contact_links:
   - name: Security report
-    url: https://github.com/zuythu3-sudo/codex-oss-kit/security/advisories/new
-    about: Do not file security issues in public.
+    url: https://github.com/zuythu3-sudo/codex-oss-kit/blob/main/SECURITY.md
+    about: Do not file security issues in public. Read SECURITY.md and email the maintainer.
