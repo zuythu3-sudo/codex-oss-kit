@@ -10,6 +10,16 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, "..");
 const checker = path.join(repoRoot, ".agents/skills/oss-ready/scripts/oss-ready.mjs");
 
+test("--lang zh prints Chinese titles and does not treat zh as a path", () => {
+  const result = spawnSync(process.execPath, [checker, repoRoot, "--lang", "zh"], {
+    encoding: "utf8",
+  });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.match(result.stdout, /开源许可证/);
+  assert.match(result.stdout, /项通过/);
+  assert.doesNotMatch(result.stdout, /Not a directory:.*zh/);
+});
+
 test("package exposes a matching npx binary for bootstrap", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(repoRoot, "package.json"), "utf8"));
   assert.equal(pkg.bin["codex-oss-kit"], "./.agents/skills/bootstrap-kit/scripts/bootstrap-kit.mjs");

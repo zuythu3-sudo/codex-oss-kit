@@ -12,10 +12,12 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { parseCli, resolveLang, t } from "../../_shared/i18n.mjs";
 
-const args = process.argv.slice(2);
-const jsonMode = args.includes("--json");
-const rootArg = args.find((value) => !value.startsWith("-")) ?? ".";
+const { flags, opts, positionals } = parseCli(process.argv.slice(2));
+const jsonMode = flags.has("json");
+const lang = resolveLang(opts.lang);
+const rootArg = positionals[0] ?? ".";
 const root = path.resolve(rootArg);
 
 /** Package-manager verbs that are not package.json scripts. */
@@ -323,19 +325,48 @@ function inspect(command, scripts, targets) {
   return { kind: "ignored", ok: true, detail: "not a local script or project command" };
 }
 
+function localizeDetail(detail) {
+  if (lang !== "zh") return detail;
+  return detail
+    .replace(/^package\.json scripts\.(\S+) exists$/, "package.json 中存在 scripts.$1")
+    .replace(/^package\.json has no scripts\.(\S+)$/, "package.json 没有 scripts.$1")
+    .replace(/^package\.json scripts\.test exists$/, "package.json 中存在 scripts.test")
+    .replace(/^package\.json has no scripts\.test$/, "package.json 没有 scripts.test")
+    .replace("install command, not a repo script", "安装命令，不是仓库脚本")
+    .replace("non-local node target, skipped", "非本地 node 目标，已跳过")
+    .replace("non-local python target, skipped", "非本地 python 目标，已跳过")
+    .replace("python test layout exists", "已找到 Python 测试布局")
+    .replace("no pytest.ini, conftest.py, pytest config, or Python test files", "没有 pytest.ini、conftest.py、pytest 配置或 Python 测试文件")
+    .replace(/^no Makefile, cannot run make (\S+)$/, "没有 Makefile，无法执行 make $1")
+    .replace(/^Makefile has target (\S+)$/, "Makefile 有目标 $1")
+    .replace(/^Makefile has no target (\S+)$/, "Makefile 没有目标 $1")
+    .replace("Makefile exists", "已找到 Makefile")
+    .replace("no Makefile", "没有 Makefile")
+    .replace("Cargo.toml exists", "已找到 Cargo.toml")
+    .replace("no Cargo.toml", "没有 Cargo.toml")
+    .replace("go.mod exists", "已找到 go.mod")
+    .replace("no go.mod", "没有 go.mod")
+    .replace("bun test does not require scripts.test", "bun test 不需要 scripts.test")
+    .replace("no package.json, bun.lock, or bun.lockb", "没有 package.json、bun.lock 或 bun.lockb")
+    .replace("not a local script or project command", "不是本地脚本或项目命令")
+    .replace(/ does not exist$/, " 不存在")
+    .replace(/ exists$/, " 存在");
+}
+
 function main() {
   if (!fs.existsSync(root) || !fs.statSync(root).isDirectory()) {
-    const message = `Not a directory: ${root}`;
-    if (jsonMode) process.stdout.write(`${JSON.stringify({ ok: false, error: message }, null, 2)}\n`);
+    const message = t(lang, { en: `Not a directory: ${root}`, zh: `不是目录：${root}` });
+    if (jsonMode) process.stdout.write(`${JSON.stringify({ ok: false, error: message, lang }, null, 2)}\n`);
     else process.stderr.write(`${message}\n`);
     process.exit(1);
   }
 
   const readme = readReadme();
   if (!readme) {
-    const report = { ok: false, root, error: "missing README.md", findings: [] };
+    const error = t(lang, { en: "missing README.md", zh: "缺少 README.md" });
+    const report = { ok: false, root, lang, error, findings: [] };
     if (jsonMode) process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
-    else process.stdout.write("docs-drift: missing README.md\n");
+    else process.stdout.write(`docs-drift: ${error}\n`);
     process.exit(1);
   }
 
@@ -354,6 +385,7 @@ function main() {
   const report = {
     ok,
     root,
+    lang,
     readme: readme.name,
     summary: {
       commands: commands.length,
@@ -369,14 +401,22 @@ function main() {
     process.stdout.write(`codex-oss-kit docs-drift\n`);
     process.stdout.write(`readme: ${readme.name}\n\n`);
     if (checked.length === 0) {
-      process.stdout.write("No local project commands found in fenced code blocks.\n");
+      process.stdout.write(
+        t(lang, {
+          en: "No local project commands found in fenced code blocks.\n",
+          zh: "代码块里没有发现本地项目命令。\n",
+        }),
+      );
     }
     for (const item of findings) {
       if (item.kind === "ignored") continue;
-      process.stdout.write(`[${item.ok ? "PASS" : "FAIL"}] ${item.command} — ${item.detail}\n`);
+      const mark = item.ok ? (lang === "zh" ? "通过" : "PASS") : lang === "zh" ? "失败" : "FAIL";
+      process.stdout.write(`[${mark}] ${item.command} — ${localizeDetail(item.detail)}\n`);
     }
     process.stdout.write(
-      `\n${checked.length} checked, ${failed.length} failing, ${commands.length - checked.length} ignored\n`,
+      lang === "zh"
+        ? `\n已检查 ${checked.length} 条，失败 ${failed.length} 条，忽略 ${commands.length - checked.length} 条\n`
+        : `\n${checked.length} checked, ${failed.length} failing, ${commands.length - checked.length} ignored\n`,
     );
   }
 

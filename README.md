@@ -1,5 +1,7 @@
 # codex-oss-kit
 
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 Codex skills for people who actually maintain a public repository.
 
 The kit follows the same shape OpenAI documented for OSS maintenance: `AGENTS.md`, repo-local skills, and optional GitHub Actions. It is not a ChatGPT wrapper and not an application-form generator.
@@ -32,7 +34,14 @@ npm run oss-ready
 npm run docs-drift
 ```
 
-JSON reports:
+Chinese or English reports:
+
+```bash
+node .agents/skills/oss-ready/scripts/oss-ready.mjs . --lang zh
+node .agents/skills/docs-drift/scripts/docs-drift.mjs . --lang en
+```
+
+`--lang` accepts `en` or `zh`. If you omit it, the tools follow `LANG` / `LC_ALL` (Chinese locales print Chinese). JSON reports stay in English.
 
 ```bash
 node .agents/skills/oss-ready/scripts/oss-ready.mjs . --json
@@ -68,12 +77,13 @@ Other public repositories can run the same checkers without copying scripts:
 - uses: actions/checkout@v7
   with:
     fetch-depth: 0
-- uses: zuythu3-sudo/codex-oss-kit@v0.1.9
+- uses: zuythu3-sudo/codex-oss-kit@v0.2.0
   with:
     checks: all
+    lang: auto
 ```
 
-`checks` can be `all`, `oss-ready`, or `docs-drift`. Reports also appear in the GitHub Actions job summary. This Action does not call the OpenAI API.
+`checks` can be `all`, `oss-ready`, or `docs-drift`. `lang` can be `auto`, `en`, or `zh`. Reports also appear in the GitHub Actions job summary. This Action does not call the OpenAI API.
 
 This repository dogfoods that Action in `.github/workflows/ci.yml`. A copy-paste workflow is in `examples/maintainer-check.yml`.
 

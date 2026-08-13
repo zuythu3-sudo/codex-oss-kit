@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 — 2026-08-13
+
+### Added
+
+- `--lang en|zh` on `$oss-ready`, `$docs-drift`, and `$bootstrap-kit`
+- Auto language from `LANG` / `LC_ALL`
+- GitHub Action `lang` input
+- Full Chinese README
+
 ## 0.1.9 — 2026-08-13
 
 ### Changed

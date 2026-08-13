@@ -19,6 +19,7 @@ Find README instructions that no longer match the repository.
 
 ```bash
 node .agents/skills/docs-drift/scripts/docs-drift.mjs .
+node .agents/skills/docs-drift/scripts/docs-drift.mjs . --lang zh
 ```
 
 JSON output:

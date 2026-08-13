@@ -16,6 +16,16 @@ function run(cwd) {
   });
 }
 
+test("--lang zh localizes the summary", () => {
+  const result = spawnSync(
+    process.execPath,
+    [checker, repoRoot, "--lang", "zh"],
+    { encoding: "utf8" },
+  );
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.match(result.stdout, /已检查/);
+});
+
 test("self README local commands exist", () => {
   const result = run(repoRoot);
   assert.equal(result.status, 0, result.stderr || result.stdout);

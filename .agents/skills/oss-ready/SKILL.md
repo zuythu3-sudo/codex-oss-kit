@@ -26,9 +26,10 @@ Run a local, read-only audit of maintainer-readiness signals.
 
 ```bash
 node .agents/skills/oss-ready/scripts/oss-ready.mjs .
+node .agents/skills/oss-ready/scripts/oss-ready.mjs . --lang zh
 ```
 
-JSON output:
+JSON output (always English fields):
 
 ```bash
 node .agents/skills/oss-ready/scripts/oss-ready.mjs . --json

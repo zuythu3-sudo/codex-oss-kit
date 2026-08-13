@@ -27,6 +27,7 @@ Never comment on, label, close, or push to GitHub unless the maintainer explicit
 - `npm test` — run checker tests
 - `npm run oss-ready` — audit this repository
 - `npm run docs-drift` — check README commands against this repository
+- Add `--lang zh` or `--lang en` to force report language. Default follows the locale.
 
 Node.js 18+ is required. There are no production npm dependencies.
 

@@ -1,6 +1,6 @@
 {
   "name": "codex-oss-kit",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "private": false,
   "description": "Codex plugin for open-source maintainers: issue triage, PR first-pass, release notes, docs drift, and OSS readiness.",
   "type": "module",
@@ -24,6 +24,7 @@
     ".agents/skills",
     "examples",
     "README.md",
+    "README.zh-CN.md",
     "LICENSE"
   ],
   "keywords": [

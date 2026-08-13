@@ -34,6 +34,7 @@ test("bootstrap copies skills and writes AGENTS.md with detected npm test", () =
   const report = JSON.parse(result.stdout);
   assert.ok(report.skills.every((item) => item.action === "copied"));
   assert.equal(report.agents.action, "wrote");
+  assert.equal(fs.existsSync(path.join(root, ".agents/skills/_shared/i18n.mjs")), true);
   assert.equal(fs.existsSync(path.join(root, ".agents/skills/oss-ready/SKILL.md")), true);
   assert.equal(fs.existsSync(path.join(root, ".agents/skills/docs-drift/scripts/docs-drift.mjs")), true);
   assert.equal(fs.existsSync(path.join(root, ".agents/skills/bootstrap-kit")), false);
@@ -49,4 +50,13 @@ test("existing AGENTS.md is left alone without --force", () => {
   const report = JSON.parse(result.stdout);
   assert.equal(report.agents.action, "skipped");
   assert.equal(fs.readFileSync(path.join(root, "AGENTS.md"), "utf8"), "# keep me\n");
+});
+
+test("--lang zh drafts a Chinese AGENTS.md", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "bootstrap-zh-"));
+  const result = run(root, ["--json", "--lang", "zh"]);
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const agents = fs.readFileSync(path.join(root, "AGENTS.md"), "utf8");
+  assert.match(agents, /项目概览/);
+  assert.match(agents, /必须使用的 skill/);
 });
