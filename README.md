@@ -62,7 +62,7 @@ Existing `AGENTS.md` and skill folders are left alone unless you pass `--force`.
 - uses: actions/checkout@v7
   with:
     fetch-depth: 0
-- uses: zuythu3-sudo/codex-oss-kit@v0.3.1
+- uses: zuythu3-sudo/codex-oss-kit@v0.3.2
   with:
     checks: all
     lang: auto

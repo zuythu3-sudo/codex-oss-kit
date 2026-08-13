@@ -1,6 +1,6 @@
 {
   "name": "codex-oss-kit",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": false,
   "description": "Local Codex skills for open-source maintainers: repo readiness, README drift checks, and draft-only issue/PR/release workflows.",
   "type": "module",
@@ -18,8 +18,8 @@
     "oss-ready": "node .agents/skills/oss-ready/scripts/oss-ready.mjs .",
     "docs-drift": "node .agents/skills/docs-drift/scripts/docs-drift.mjs .",
     "bootstrap": "node .agents/skills/bootstrap-kit/scripts/bootstrap-kit.mjs",
-    "test": "node --test tests/*.test.mjs",
-    "check": "node --test tests/*.test.mjs && node .agents/skills/oss-ready/scripts/oss-ready.mjs . && node .agents/skills/docs-drift/scripts/docs-drift.mjs ."
+    "test": "node --test tests/bootstrap-kit.test.mjs tests/docs-drift.test.mjs tests/i18n.test.mjs tests/oss-ready.test.mjs",
+    "check": "npm test && node .agents/skills/oss-ready/scripts/oss-ready.mjs . && node .agents/skills/docs-drift/scripts/docs-drift.mjs ."
   },
   "homepage": "https://github.com/zuythu3-sudo/codex-oss-kit",
   "bugs": {

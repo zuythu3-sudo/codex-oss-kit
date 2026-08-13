@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2 — 2026-08-13
+
+### Fixed
+
+- `npm test` now lists test files explicitly so Windows Node 18/20 can run them
+
 ## 0.3.1 — 2026-08-13
 
 ### Fixed

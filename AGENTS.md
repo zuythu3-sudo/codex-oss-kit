@@ -2,7 +2,7 @@
 
 ## Project overview
 
-codex-oss-kit is a Codex plugin for open-source maintainers.
+codex-oss-kit is a set of local Codex skills for open-source maintainers.
 
 - Repo-local skills live under `.agents/skills/`. `$oss-ready` also accepts `skills/<name>/SKILL.md` and other nearby `SKILL.md` files.
 - Executable checkers live under each skill's `scripts/` directory.

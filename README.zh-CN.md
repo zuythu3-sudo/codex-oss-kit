@@ -62,7 +62,7 @@ npx --yes github:zuythu3-sudo/codex-oss-kit -- /path/to/your/repo --lang zh
 - uses: actions/checkout@v7
   with:
     fetch-depth: 0
-- uses: zuythu3-sudo/codex-oss-kit@v0.3.1
+- uses: zuythu3-sudo/codex-oss-kit@v0.3.2
   with:
     checks: all
     lang: zh
